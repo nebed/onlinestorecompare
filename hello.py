@@ -6,6 +6,8 @@ from bs4 import BeautifulSoup
 from flask import Flask, jsonify, render_template, request
 from store_functions import *
 from flask_cors import CORS
+
+
 app = Flask(__name__)
 CORS(app)
 
@@ -22,7 +24,7 @@ def hello_world():
 	return render_template('index.html'),200
 
 @app.route('/search/<term>/', methods=['GET'])
-def search_torrents(term=None):
+def search_products(term=None):
     '''
     Searches online stores using the given term. If no term is given, defaults to recent.
     '''
@@ -74,7 +76,7 @@ def parse_titles(soup,STORE):
         'slot': parse_title_slot
     }
     # Get the function from switcher dictionary
-    func = switcher.get(argument, lambda: "Invalid Store")
+    func = switcher.get(STORE, lambda: "Invalid Store")
     # Execute the function
     titles = func(soup)
 	return titles
@@ -88,7 +90,7 @@ def parse_images(soup,STORE):
         'slot': parse_image_slot
     }
     # Get the function from switcher dictionary
-    func = switcher.get(argument, lambda: "Invalid Store")
+    func = switcher.get(STORE, lambda: "Invalid Store")
     # Execute the function
     images = func(soup)
 	return images
