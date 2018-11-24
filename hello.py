@@ -11,7 +11,7 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-JUMIA_URL = os.getenv('JUMIA_URL', 'https://www.jumia.com.ng/?q=')
+JUMIA_URL = os.getenv('JUMIA_URL', 'https://www.jumia.com.ng/catalog/?q=')
 KONGA_URL = os.getenv('KONGA_URL', 'https://www.konga.com/search?search=')
 KARA_URL = os.getenv('KARA_URL', 'http://www.kara.com.ng/catalogsearch/result?q=')
 SLOT_URL = os.getenv('SLOT_URL', 'https://slot.ng/?post_type=product&s=')
@@ -31,7 +31,7 @@ def search_products(term=None):
     '''
     #sort_arg = sort_filters[request.args.get('sort')] if sort in sort_filters else ''
 
-    jumiaurl = JUMIA_URL + str(term)
+    jumiaurl = JUMIA_URL + re.sub(r"\s+", '+', str(term))
     kongaurl = KONGA_URL + str(term)
     karaurl = KARA_URL + str(term)
     sloturl = SLOT_URL + str(term)
@@ -46,10 +46,12 @@ def parse_jumia(url, sort=None):
     '''
     This function parses the page and returns list of torrents
     '''
+    print(url)
     STORE = "jumia"
     data = requests.get(url).text
     soup = BeautifulSoup(data, 'lxml')
-    table_present = soup.find('section', {'class': 'products osh_gallery-no_gutter'})
+    #print(soup)
+    table_present = soup.find('section', {'class': 'products -mabaya'})
     if table_present is None:
         return EMPTY_LIST
     titles = parse_titles(soup,STORE)
@@ -59,7 +61,13 @@ def parse_jumia(url, sort=None):
     #product_urls = parse_product_urls(soup,STORE)
     #price_drops = parse_price_drops(soup,STORE)
     search_results = []
-    for search_result in zip(titles, images, prices, ratings, product_urls, price_drops):
+    for search_result in zip(titles, images, prices):
+        search_results.append({
+            'title': search_result[0],
+            'image': search_result[1],
+            'price': search_result[2],
+        })
+    '''for search_result in zip(titles, images, prices, ratings, product_urls, price_drops):
         search_results.append({
             'title': search_result[0],
             'image': search_result[1],
@@ -67,8 +75,8 @@ def parse_jumia(url, sort=None):
             'rating': search_result[3],
             'product_url': search_result[4],
             'price_drop': search_result[5],
-        })
-    return search_results
+        })'''
+    return titles,images,prices
 
 def parse_kara(url, sort=None):
 

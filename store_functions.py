@@ -41,8 +41,8 @@ def parse_image_jumia(soup):
     '''
     Returns list of images of products from store
     '''
-    images = soup.find_all("img", class_="lazy image -loaded")
-    images[:] = [image.get('src') for image in images]
+    images = soup.find_all("div", class_="image-wrapper")
+    images[:] = [image.img.get('data-src') for image in images]
 
     return images
 
@@ -77,8 +77,9 @@ def parse_price_jumia(soup):
     '''
     Returns list of images of products from store
     '''
-    prices = soup.find_all("span", class_="price")
-    prices[:] = [price.span.next_sibling.get('data-price') for price in prices]
+    prices = soup.find_all("span", class_="price-box ri")
+    print(prices)
+    prices[:] = [price.span.find("span", dir="ltr").get('data-price') for price in prices]
 
     return prices
 
