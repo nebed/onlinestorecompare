@@ -15,6 +15,7 @@ JUMIA_URL = os.getenv('JUMIA_URL', 'https://www.jumia.com.ng/?q=')
 KONGA_URL = os.getenv('KONGA_URL', 'https://www.konga.com/search?search=')
 KARA_URL = os.getenv('KARA_URL', 'http://www.kara.com.ng/catalogsearch/result?q=')
 SLOT_URL = os.getenv('SLOT_URL', 'https://slot.ng/?post_type=product&s=')
+EMPTY_LIST = []
 
 urls = [JUMIA_URL,KONGA_URL,KARA_URL,SLOT_URL]
 
@@ -35,11 +36,11 @@ def search_products(term=None):
     karaurl = KARA_URL + str(term)
     sloturl = SLOT_URL + str(term)
     jumiaresult=parse_jumia(jumiaurl)
-    kararesult=parse_kara(karaurl)
-    kongaresult=parse_konga(kongaurl)
-    slotresult=parse_slot(sloturl)
+    #kararesult=parse_kara(karaurl)
+    #kongaresult=parse_konga(kongaurl)
+    #slotresult=parse_slot(sloturl)
 
-    return jsonify(results), 200
+    return jsonify(jumiaresult), 200
 
 def parse_jumia(url, sort=None):
     '''
@@ -54,9 +55,9 @@ def parse_jumia(url, sort=None):
     titles = parse_titles(soup,STORE)
     images = parse_images(soup,STORE)
     prices = parse_prices(soup,STORE)
-    ratings = parse_ratings(soup,STORE)
-    product_urls = parse_product_urls(soup,STORE)
-    price_drops = parse_price_drops(soup,STORE)
+    #ratings = parse_ratings(soup,STORE)
+    #product_urls = parse_product_urls(soup,STORE)
+    #price_drops = parse_price_drops(soup,STORE)
     search_results = []
     for search_result in zip(titles, images, prices, ratings, product_urls, price_drops):
         search_results.append({
@@ -67,6 +68,19 @@ def parse_jumia(url, sort=None):
             'product_url': search_result[4],
             'price_drop': search_result[5],
         })
+    return search_results
+
+def parse_kara(url, sort=None):
+
+    return []
+
+def parse_konga(url, sort=None):
+
+    return []
+
+def parse_slot(url, sort=None):
+
+    return []
 
 def parse_titles(soup,STORE):
     switcher = {
