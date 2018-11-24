@@ -79,11 +79,11 @@ def parse_titles(soup,STORE):
     func = switcher.get(STORE, lambda: "Invalid Store")
     # Execute the function
     titles = func(soup)
-	return titles
+    return titles
 
 
 def parse_images(soup,STORE):
-	switcher = {
+    switcher = {
         'jumia': parse_image_jumia,
         'konga': parse_image_konga,
         'kara': parse_image_kara,
@@ -93,23 +93,32 @@ def parse_images(soup,STORE):
     func = switcher.get(STORE, lambda: "Invalid Store")
     # Execute the function
     images = func(soup)
-	return images
+    return images
 
 def parse_prices(soup,STORE):
-
-	return
+    switcher = {
+        'jumia': parse_price_jumia,
+        'konga': parse_price_konga,
+        'kara': parse_price_kara,
+        'slot': parse_price_slot
+    }
+    # Get the function from switcher dictionary
+    func = switcher.get(STORE, lambda: "Invalid Store")
+    # Execute the function
+    images = func(soup)
+    return images
 
 def parse_ratings(soup,STORE):
 
-	return
+    return
 
 def parse_product_urls(soup,STORE):
 
-	return
+    return
 
 def parse_price_drops(soup,STORE):
 
-	return 
+    return 
 
 if __name__ == '__main__':
 	app.debug = True
