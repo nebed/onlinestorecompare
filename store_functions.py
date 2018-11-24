@@ -59,8 +59,8 @@ def parse_image_kara(soup):
     '''
     Returns list of images of products from store
     '''
-    images = soup.find_all("h2", class_="product-name")
-    images[:] = [image.a.get('image') for image in images]
+    images = soup.find_all("div", class_="prolabel-wrapper")
+    images[:] = [image.a.img.get('src') for image in images]
 
     return images
 
