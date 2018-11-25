@@ -78,7 +78,6 @@ def parse_price_jumia(soup):
     Returns list of images of products from store
     '''
     prices = soup.find_all("span", class_="price-box ri")
-    print(prices)
     prices[:] = [price.span.find("span", dir="ltr").get('data-price') for price in prices]
 
     return prices
@@ -109,3 +108,39 @@ def parse_price_slot(soup):
     prices[:] = [price.get_text() for price in prices]
 
     return prices
+
+def parse_url_jumia(soup):
+    '''
+    Returns list of images of products from store
+    '''
+    urls = soup.find_all("div", class_="sku -gallery")
+    urls[:] = [url.a.get('href') for url in urls]
+
+    return urls
+
+def parse_url_konga(soup):
+    '''
+    Returns list of urls of products from store
+    '''
+    urls = soup.find_all("div", class_="_7e903_3FsI6")
+    urls[:] = ["https://www.konga.com" + url.a.get("href") for url in urls]
+
+    return urls
+
+def parse_url_kara(soup):
+    '''
+    Returns list of urls of products from store
+    '''
+    urls = soup.find_all("h2", class_="product-name")
+    urls[:] = [ url.a.get('href')  for url in urls]
+
+    return urls
+
+def parse_url_slot(soup):
+    '''
+    Returns list of urls of products from store
+    '''
+    urls = soup.find_all('div', class_="mf-product-thumbnail")
+    urls[:] = [url.a.get('href') for url in urls]
+
+    return urls
