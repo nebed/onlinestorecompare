@@ -34,7 +34,6 @@ def parse_title_slot(soup):
     '''
     titles = soup.find_all(class_="mf-product-details-hover")
     titles[:] = [title.h2.get_text() for title in titles]
-    print(titles)
 
     return titles
 
@@ -71,7 +70,6 @@ def parse_image_slot(soup):
     '''
     images = soup.find_all(class_="mf-product-thumbnail")
     images[:] = [image.a.img.get('data-original') for image in images]
-    print(images)
 
     return images
 
@@ -109,7 +107,6 @@ def parse_price_slot(soup):
     '''
     prices = soup.find_all('span', class_="woocommerce-Price-amount amount")
     prices[:] = [sub(r'[^\d.]', '', price.get_text()) for price in prices]
-    print(prices)
 
     return prices
 
@@ -146,6 +143,5 @@ def parse_url_slot(soup):
     '''
     urls = soup.find_all('div', class_="mf-product-thumbnail")
     urls[:] = [url.a.get('href') for url in urls]
-    print(urls)
 
     return urls

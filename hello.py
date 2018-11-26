@@ -23,7 +23,7 @@ urls = [JUMIA_URL,KONGA_URL,KARA_URL,SLOT_URL]
 
 
 @app.route('/')
-def hello_world():
+def home_page():
 	return render_template('index.html'),200
 
 @app.route('/search/<term>/', methods=['GET'])
@@ -38,10 +38,10 @@ def search_products(term=None):
     karaurl = KARA_URL + str(term)
     sloturl = SLOT_URL + sub(r"\s+", '+', str(term))
     jumiaresult=parse_jumia(jumiaurl)
-    #kararesult=parse_kara(karaurl)
+    kararesult=parse_kara(karaurl)
     kongaresult=parse_konga(KONGA_URL,term)
     slotresult=parse_slot(sloturl)
-    results = jumiaresult + kongaresult + slotresult
+    results = jumiaresult + kongaresult + slotresult + kararesult
 
     return jsonify(results), 200
 
@@ -71,7 +71,11 @@ def parse_jumia(url, sort=None):
     '''
     #print(url)
     STORE = "jumia"
-    data = requests.get(url).text
+    try:
+        data = requests.get(url).text
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        print(e)
+        sys.exit(1)
     soup = BeautifulSoup(data, 'lxml')
     #print(soup)
     table_present = soup.find('section', {'class': 'products -mabaya'})
@@ -85,7 +89,11 @@ def parse_kara(url, sort=None):
     '''
     #print(url)
     STORE = "kara"
-    data = requests.get(url).text
+    try:
+        data = requests.get(url).text
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        print(e)
+        sys.exit(1)
     soup = BeautifulSoup(data, 'lxml')
     #print(soup)
     table_present = soup.find('ul', {'class': 'searchindex-results'})
@@ -102,7 +110,11 @@ def parse_konga(url, term):
     params = {"x-algolia-agent": "Algolia for vanilla JavaScript 3.30.0;react-instantsearch 5.3.2;JS Helper 2.26.1", "x-algolia-application-id": "B9ZCRRRVOM", "x-algolia-api-key": "cb605b0936b05ce1a62d96f53daa24f7"}
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36','accept': 'application/json','content-type': 'application/x-www-form-urlencoded','Origin': 'https://www.konga.com'}
     data = json.dumps({"requests" : [{"indexName":"catalog_store_konga_price_desc" ,"params":"query=" + sub(r"\s+", '%20', str(term))  }]})
-    response = requests.post(url,headers=headers, params=params, data=data).json()
+    try:
+        response = requests.post(url,headers=headers, params=params, data=data).json()
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        print(e)
+        sys.exit(1)
     #n.loads(response['requests'][], object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
     soup = response['results'][0]['hits']    
     #print(response)
@@ -131,7 +143,7 @@ def parse_titles(soup,STORE):
         'slot': parse_title_slot
     }
     # Get the function from switcher dictionary
-    func = switcher.get(STORE, lambda: "Invalid Store")
+    func = switcher.get(STORE, lambda: "Store is not supported yet")
     # Execute the function
     titles = func(soup)
     return titles
@@ -145,7 +157,7 @@ def parse_images(soup,STORE):
         'slot': parse_image_slot
     }
     # Get the function from switcher dictionary
-    func = switcher.get(STORE, lambda: "Invalid Store")
+    func = switcher.get(STORE, lambda: "Store is not supported yet")
     # Execute the function
     images = func(soup)
     return images
@@ -158,7 +170,7 @@ def parse_prices(soup,STORE):
         'slot': parse_price_slot
     }
     # Get the function from switcher dictionary
-    func = switcher.get(STORE, lambda: "Invalid Store")
+    func = switcher.get(STORE, lambda: "Store is not supported yet")
     # Execute the function
     images = func(soup)
     return images
@@ -175,7 +187,7 @@ def parse_product_urls(soup,STORE):
         'slot': parse_url_slot
     }
     # Get the function from switcher dictionary
-    func = switcher.get(STORE, lambda: "Invalid Store")
+    func = switcher.get(STORE, lambda: "Store is not supported yet")
     # Execute the function
     urls = func(soup)
     return urls
