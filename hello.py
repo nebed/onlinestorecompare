@@ -1,8 +1,9 @@
 import os
 
 import requests
-import re
 import json
+from collections import namedtuple
+from re import sub
 from bs4 import BeautifulSoup
 from flask import Flask, jsonify, render_template, request
 from store_functions import *
@@ -32,29 +33,20 @@ def search_products(term=None):
     '''
     #sort_arg = sort_filters[request.args.get('sort')] if sort in sort_filters else ''
 
-    jumiaurl = JUMIA_URL + re.sub(r"\s+", '+', str(term))
-    #kongaurl = KONGA_URL + re.sub(r"\s+", '%20', str(term))
+    jumiaurl = JUMIA_URL + sub(r"\s+", '+', str(term))
+    #kongaurl = KONGA_URL + sub(r"\s+", '%20', str(term))
     karaurl = KARA_URL + str(term)
-    sloturl = SLOT_URL + str(term)
-    #jumiaresult=parse_jumia(jumiaurl)
+    sloturl = SLOT_URL + sub(r"\s+", '+', str(term))
+    jumiaresult=parse_jumia(jumiaurl)
     #kararesult=parse_kara(karaurl)
     kongaresult=parse_konga(KONGA_URL,term)
-    #slotresult=parse_slot(sloturl)
+    slotresult=parse_slot(sloturl)
+    results = jumiaresult + kongaresult + slotresult
 
-    return jsonify(kongaresult), 200
+    return jsonify(results), 200
 
-def parse_jumia(url, sort=None):
-    '''
-    This function parses the page and returns list of torrents
-    '''
-    print(url)
-    STORE = "jumia"
-    data = requests.get(url).text
-    soup = BeautifulSoup(data, 'lxml')
-    #print(soup)
-    table_present = soup.find('section', {'class': 'products -mabaya'})
-    if table_present is None:
-        return EMPTY_LIST
+
+def parse_all(soup,STORE):
     titles = parse_titles(soup,STORE)
     images = parse_images(soup,STORE)
     prices = parse_prices(soup,STORE)
@@ -69,65 +61,67 @@ def parse_jumia(url, sort=None):
             'price': search_result[2],
             'url': search_result[3],
         })
-    '''for search_result in zip(titles, images, prices, ratings, product_urls, price_drops):
-        search_results.append({
-            'title': search_result[0],
-            'image': search_result[1],
-            'price': search_result[2],
-            'rating': search_result[3],
-            'product_url': search_result[4],
-            'price_drop': search_result[5],
-        })'''
-    return titles,images,prices
+    return search_results
+
+
+
+def parse_jumia(url, sort=None):
+    '''
+    This function parses the page and returns list of torrents
+    '''
+    #print(url)
+    STORE = "jumia"
+    data = requests.get(url).text
+    soup = BeautifulSoup(data, 'lxml')
+    #print(soup)
+    table_present = soup.find('section', {'class': 'products -mabaya'})
+    if table_present is None:
+        return EMPTY_LIST
+    return parse_all(soup,STORE)
 
 def parse_kara(url, sort=None):
-
-    return []
+    '''
+    This function parses the page and returns list of torrents
+    '''
+    #print(url)
+    STORE = "kara"
+    data = requests.get(url).text
+    soup = BeautifulSoup(data, 'lxml')
+    #print(soup)
+    table_present = soup.find('ul', {'class': 'searchindex-results'})
+    if table_present is None:
+        return EMPTY_LIST
+    return parse_all(soup,STORE)
 
 def parse_konga(url, term):
     '''
     This function parses the page and returns list of torrents
     '''
-    print(url)
+    #print(url)
     STORE = "konga"
     params = {"x-algolia-agent": "Algolia for vanilla JavaScript 3.30.0;react-instantsearch 5.3.2;JS Helper 2.26.1", "x-algolia-application-id": "B9ZCRRRVOM", "x-algolia-api-key": "cb605b0936b05ce1a62d96f53daa24f7"}
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36','accept': 'application/json','content-type': 'application/x-www-form-urlencoded','Origin': 'https://www.konga.com'}
-    #formdata={"requests":[{"indexName":"catalog_store_konga_price_desc","params":"query=infinix%20hot%206&maxValuesPerFacet=50&page=0&highlightPreTag=%3Cais-highlight-0000000000%3E&highlightPostTag=%3C%2Fais-highlight-0000000000%3E&facets=%5B%22special_price%22%2C%22attributes.brand%22%2C%22attributes.screen_size%22%2C%22attributes.ram_gb%22%2C%22attributes.sim%22%2C%22attributes.sim_slots%22%2C%22attributes.capacity%22%2C%22attributes.battery%22%2C%22attributes.connectivity%22%2C%22attributes.hard_drive%22%2C%22attributes.internal%22%2C%22attributes.tv_screen_size%22%2C%22attributes.operating_system%22%2C%22attributes.kids_shoes%22%2C%22attributes.heel_type%22%2C%22attributes.heel_height%22%2C%22attributes.leg_width%22%2C%22attributes.fastening%22%2C%22attributes.shirt_size%22%2C%22attributes.shoe_size%22%2C%22attributes.lingerie_size%22%2C%22attributes.pants_size%22%2C%22attributes.size%22%2C%22attributes.color%22%2C%22attributes.mainmaterial%22%2C%22konga_fulfilment_type%22%2C%22is_pay_on_delivery%22%2C%22is_free_shipping%22%2C%22pickup%22%2C%22categories.lvl0%22%5D&tagFilters=&ruleContexts=%5B%22%22%5D"}]}
-    data = json.dumps({"requests" : [{"indexName":"catalog_store_konga_price_desc" ,"params":"query=" + re.sub(r"\s+", '%20', str(term))  }]})
-    response = requests.post(url,headers=headers, params=params, data=data).json()    
-    #soup = BeautifulSoup(data, 'lxml')
-    print(response)
+    data = json.dumps({"requests" : [{"indexName":"catalog_store_konga_price_desc" ,"params":"query=" + sub(r"\s+", '%20', str(term))  }]})
+    response = requests.post(url,headers=headers, params=params, data=data).json()
+    #n.loads(response['requests'][], object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+    soup = response['results'][0]['hits']    
+    #print(response)
     #table_present = soup.find('div', {'class': 'ais-InstantSearch__root'})
-    '''if table_present is None:
-        return EMPTY_LIST
-    titles = parse_titles(soup,STORE)
-    images = parse_images(soup,STORE)
-    prices = parse_prices(soup,STORE)
-    #ratings = parse_ratings(soup,STORE)
-    product_urls = parse_product_urls(soup,STORE)
-    #price_drops = parse_price_drops(soup,STORE)
-    search_results = []
-    for search_result in zip(titles, images, prices, product_urls):
-        search_results.append({
-            'title': search_result[0],
-            'image': search_result[1],
-            'price': search_result[2],
-            'url': search_result[3],
-        })'''
-    '''for search_result in zip(titles, images, prices, ratings, product_urls, price_drops):
-        search_results.append({
-            'title': search_result[0],
-            'image': search_result[1],
-            'price': search_result[2],
-            'rating': search_result[3],
-            'product_url': search_result[4],
-            'price_drop': search_result[5],
-        })'''
-    return response
+    return parse_all(soup,STORE)
 
 def parse_slot(url, sort=None):
-
-    return []
+    '''
+    This function parses the page and returns list of torrents
+    '''
+    #print(url)
+    STORE = "slot"
+    data = requests.get(url).text
+    soup = BeautifulSoup(data, 'lxml')
+    #print(soup)
+    table_present = soup.find('div', {'class': 'products-found'})
+    if table_present is None:
+        return EMPTY_LIST
+    return parse_all(soup,STORE)
 
 def parse_titles(soup,STORE):
     switcher = {
