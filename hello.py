@@ -37,21 +37,19 @@ def search_products(term=None):
     #kongaurl = KONGA_URL + sub(r"\s+", '%20', str(term))
     karaurl = KARA_URL + str(term)
     sloturl = SLOT_URL + sub(r"\s+", '+', str(term))
-    jumiaresult=parse_jumia(jumiaurl)
-    kararesult=parse_kara(karaurl)
-    kongaresult=parse_konga(KONGA_URL,term)
-    slotresult=parse_slot(sloturl)
-    results = jumiaresult + kongaresult + slotresult + kararesult
+    results = parse_jumia(jumiaurl) + parse_kara(karaurl) + parse_konga(KONGA_URL,term) + parse_slot(sloturl)
 
     return jsonify(results), 200
 
 
 def parse_all(soup,STORE):
+
     titles = parse_titles(soup,STORE)
     images = parse_images(soup,STORE)
     prices = parse_prices(soup,STORE)
     #ratings = parse_ratings(soup,STORE)
     product_urls = parse_product_urls(soup,STORE)
+    source = STORE
     #price_drops = parse_price_drops(soup,STORE)
     search_results = []
     for search_result in zip(titles, images, prices, product_urls):
@@ -60,6 +58,7 @@ def parse_all(soup,STORE):
             'image': search_result[1],
             'price': search_result[2],
             'url': search_result[3],
+            'source': source,
         })
     return search_results
 

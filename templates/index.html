@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Landing Page - Start Bootstrap Theme</title>
+    <title>OnlilneStoreCompare</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/static/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -29,8 +29,8 @@
     <!-- Navigation -->
     <nav class="navbar navbar-light static-top mb-3">
       <div class="container">
-        <a class="navbar-brand" href="#">Product Search</a>
-        <a class="navbar-brand" href="#">Sign In</a>
+        <a class="navbar-brand" href="#"><strong>OnlineStoreCompare</strong></a>
+        <a class="navbar-brand" href="#">Find it all</a>
       </div>
     </nav>
 
@@ -48,20 +48,20 @@
       </div>
     </section>
 
+    <section id="root">
+
     <!-- Masthead -->
     <section class="home-main-item mb-3">
       <div class="container p-3 bg-white">
       <h5 class="mb-3">Search products</h5>
         <div class="row">
           <div class="col-md-9 col-lg-8 col-xl-7 mx-auto">
-            <form>
               <div class="form-row justify-content-center mb-3">
-                  <input type="email" class="form-control form-control-lg form-border" placeholder="Product Name">
+                  <input type="text" class="form-control form-control-lg form-border" v-model="term" placeholder="Product Name">
               </div>
               <div class="form-row justify-content-center">
-                  <button type="submit" class="btn btn-block btn-lg border-yellow btn-grey">Search</button>
+                  <button v-on:click="getResults" class="btn btn-block btn-lg border-yellow btn-grey">Search</button>
               </div>
-            </form>
           </div>
         </div>
       </div>
@@ -71,65 +71,12 @@
       <div class="container p-3 bg-white">
       <h5 class="mb-3">Search results</h5>
         <div class="row">
-          <div class="col-lg-3 col-md-3 mb-3">
-            <div class="card card-border-color jumia">
-                <div class="card-body">
-                  <div class="row">
-                  <div class="col-5">
-                    <div class="align-middle mtb-auto"><a href=""><img class="img-fluid" src="/static/img/testimonials-1.jpg" style="width:120px;"></a></div>
-                  </div>
-                  <div class="col-7">
-                    <p> Quisque gravida aliquam diam at cursus, quisque laoreet ac lectus a rhoncusac tempus odio. </p>
-                  </div>
-                </div>
-                </div>
-              </div>
-          </div>
-          <div class="col-lg-3 col-md-3 mb-3">
-            <div class="card card-border-color konga">
-                <div class="card-body">
-                  <div class="row">
-                  <div class="col-5">
-                    <div class="align-middle mtb-auto"><a href=""><img class="img-fluid" src="/static/img/testimonials-1.jpg" style="width:120px;"></a></div>
-                  </div>
-                  <div class="col-7">
-                    <p> Quisque gravida aliquam diam at cursus, quisque laoreet ac lectus a rhoncusac tempus odio. </p>
-                  </div>
-                </div>
-                </div>
-              </div>
-          </div>
-          <div class="col-lg-3 col-md-3 mb-3">
-            <div class="card card-border-color kara">
-                <div class="card-body">
-                  <div class="row">
-                  <div class="col-5">
-                    <div class="align-middle mtb-auto"><a href=""><img class="img-fluid" src="/static/img/testimonials-1.jpg" style="width:120px;"></a></div>
-                  </div>
-                  <div class="col-7">
-                    <p> Quisque gravida aliquam diam at cursus, quisque laoreet ac lectus a rhoncusac tempus odio. </p>
-                  </div>
-                </div>
-                </div>
-              </div>
-          </div>
-          <div class="col-lg-3 col-md-3 mb-3">
-            <div class="card card-border-color slot">
-                <div class="card-body">
-                  <div class="row">
-                  <div class="col-5">
-                    <div class="align-middle mtb-auto"><a href=""><img class="img-fluid" src="/static/img/testimonials-1.jpg" style="width:120px;"></a></div>
-                  </div>
-                  <div class="col-7">
-                    <p> Quisque gravida aliquam diam at cursus, quisque laoreet ac lectus a rhoncusac tempus odio. </p>
-                  </div>
-                </div>
-                </div>
-              </div>
-          </div>
+          <search-result v-for="result in searchResults" :url="result.url" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></search-result>
         </div>
       </div>
     </section>
+
+  </section>
 
     <!-- Call to Action -->
     <section class="call-to-action text-white text-center">
@@ -153,7 +100,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> 
 
     <!-- Footer -->
     <footer class="footer bg-light">
@@ -177,7 +124,7 @@
                 <a href="#">Privacy Policy</a>
               </li>
             </ul>
-            <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2018. All Rights Reserved.</p>
+            <p class="text-muted small mb-4 mb-lg-0">&copy; OnlineStoreCompare 2018. All Rights Reserved.</p>
           </div>
           <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
             <ul class="list-inline mb-0">
@@ -207,10 +154,9 @@
     <!-- Bootstrap core JavaScript -->
     <script src="/static/vendor/jquery/jquery.min.js"></script>
     <script src="/static/vendor/bootstrap/js/bootstrap.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js">
-    </script>
-    <script src="/static/js/main.js">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/static/js/main.js"></script>
 
   </body>
 
