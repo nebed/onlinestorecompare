@@ -72,7 +72,7 @@ var app = new Vue({
 
 				getResults() {
 					this.loading = true;
-					axios.get('/search/' + this.term).then(response => {this.loading = false; return this.results = response.data;});
+					axios.get('/search/' + this.term).then(response => {this.loading = false; return this.results = response.data;}).catch(error => { this.loading = false; return console.log(error);});
 				}
 			}
 
