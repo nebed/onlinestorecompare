@@ -41,8 +41,8 @@ def parse_title_jiji(soup):
     '''
     Returns list of titles of products from store
     '''
-    tit=supp.find_all(class_="h-inline h-font-18 h-bold h-mv-0")
-    titles[:]=[tit.a.next_element for title in titles]
+    titles=soup.find_all("h2", class_="qa-advert-title b-list-advert__item-title")
+    titles[:]=[title.get_text() for title in titles]
     return titles
 
 def parse_image_jumia(soup):
@@ -85,8 +85,8 @@ def parse_image_jiji(soup):
     '''
     Returns list of images urls of products from store
     '''
-    imgl=soup.find_all(class_="squared js-api-lazy-image ")
-    images[:]=[imgl.get("src") for image in images]
+    images=soup.find_all(class_="squared js-api-lazy-image ")
+    images[:]=[image.get("src") for image in images]
     return images
 
 def parse_price_jumia(soup):
@@ -130,9 +130,8 @@ def parse_price_jiji(soup):
     Returns list of prices of products from store
     '''
     
-    pri=soup.find_all(class_="b-list-advert__item-price")
-    pric=pri.next_element
-    prices[:] = [pric.next_element for price in prices]
+    prices=soup.find_all(class_="b-list-advert__item-price")
+    prices[:] = [sub(r'[^\d.]', '', price.get_text()) for price in prices]
     return prices
 
 def parse_url_jumia(soup):
@@ -170,10 +169,11 @@ def parse_url_slot(soup):
     urls[:] = [url.a.get('href') for url in urls]
 
     return urls
+
 def parse_url_jiji(soup):
     '''
     Returns list of urls of products from store
     '''
-    urls=soup.find_all('h3',class_="h-inline h-font-18 h-bold h-mv-0")
+    urls=soup.find_all('a',class_="b-list-advert__item-textblock js-handle-click-ctr")
     urls[:]=[url.a.get("href") for url in urls]
     return urls
