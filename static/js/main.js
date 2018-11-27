@@ -39,7 +39,7 @@ var app = new Vue({
 
 			computed: {
 				searchResults() {
-					return this.results;
+					return this.results.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price));
 				}
 				
 			},
