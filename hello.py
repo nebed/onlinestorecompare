@@ -38,12 +38,12 @@ def search_products(term=None):
     #kongaurl = KONGA_URL + sub(r"\s+", '%20', str(term))
     karaurl = KARA_URL + str(term)
     sloturl = SLOT_URL + sub(r"\s+", '+', str(term))
-	jijiurl= JIJI_URL + term.replace(' ', '+')	
+    jijiurl= JIJI_URL + sub(r"\s+", '+', str(term))	
     jumiaresult=parse_jumia(jumiaurl)
     kararesult=parse_kara(karaurl)
     kongaresult=parse_konga(KONGA_URL,term)
     slotresult=parse_slot(sloturl)
-	jijiresult=parse_jiji(jijiurl)
+    jijiresult=parse_jiji(jijiurl)
     results = jumiaresult + kongaresult + slotresult + kararesult+jijiresult
 
     return jsonify(results), 200
