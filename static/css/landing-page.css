@@ -27,6 +27,10 @@ h6 {
     padding: 0 2px;
 }
 
+.cl1 {
+  color: #1f2833;
+}
+
 header.masthead {
   position: relative;  
   padding-top: 4rem;
@@ -92,14 +96,34 @@ header.masthead {
   border-top-color: #f68b1e;
 }
 
+.bg-jumia {
+  background-color: #f68b1e;
+  border-color: #f68b1e;
+}
+
 .konga {
  border-top-width: 2px;
   border-top-color: #ed017f;
 }
 
+.bg-konga {
+  background-color: #ed017f;
+  border-color: #ed017f;
+}
+
 .kara {
   border-top-width: 2px;
   border-top-color: #ba1600;
+}
+
+.bg-kara {
+  background-color: #ba1600;
+  border-color: #ba1600;
+}
+
+.bg-slot {
+  background-color: #dd2400;
+   border-color: #dd2400;
 }
 
 .slot {
