@@ -41,8 +41,8 @@ def parse_title_jiji(soup):
     '''
     Returns list of titles of products from store
     '''
-    titles=soup.find_all("h2", class_="qa-advert-title b-list-advert__item-title")
-    titles[:]=[title.get_text() for title in titles]
+    titles=soup.find_all("h4", class_="qa-advert-title b-list-advert__item-title")
+    titles[:]=[title.get_text().replace('\n', '').strip() for title in titles]
     
     return titles
 
@@ -86,8 +86,8 @@ def parse_image_jiji(soup):
     '''
     Returns list of images urls of products from store
     '''
-    images=soup.find_all(class_="squared js-api-lazy-image ")
-    images[:]=[image.get("src") for image in images]
+    images=soup.find_all("a", class_="b-list-advert__item-image js-handle-click-ctr")
+    images[:]=[image.img.get("data-src") for image in images]
     
     return images
 
@@ -129,10 +129,9 @@ def parse_price_slot(soup):
     return prices
 
 def parse_price_jiji(soup):
-     '''
+    '''
     Returns list of prices of products from store
     '''
-    
     prices=soup.find_all(class_="b-list-advert__item-price")
     prices[:] = [sub(r'[^\d.]', '', price.get_text()) for price in prices]
     

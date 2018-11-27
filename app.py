@@ -85,16 +85,18 @@ def parse_jumia(url, sort=None):
     return parse_all(soup,STORE)
 
 def parse_jiji(url, sort=None):
-	'''
+    '''
     This function parses the page and returns list of torrents
     '''
-    STORE ="jiji"
+    #print(url)
+    STORE = "jiji"
     try:
         data = requests.get(url).text
     except requests.exceptions.RequestException as e:  # This is the correct syntax
         print(e)
         sys.exit(1)
     soup = BeautifulSoup(data, 'lxml')
+    print(soup)
     table_present = soup.find('div', {'class': 'b-adverts-list-title'})
     if table_present is None:
         return EMPTY_LIST
@@ -158,7 +160,7 @@ def parse_titles(soup,STORE):
         'konga': parse_title_konga,
         'kara': parse_title_kara,
         'slot': parse_title_slot,
-	    'jiji':parse_title_jiji
+	    'jiji': parse_title_jiji
     }
     # Get the function from switcher dictionary
     func = switcher.get(STORE, lambda: "Store is not supported yet")
@@ -173,7 +175,7 @@ def parse_images(soup,STORE):
         'konga': parse_image_konga,
         'kara': parse_image_kara,
         'slot': parse_image_slot,
-	    'jiji':parse_image_jiji
+	    'jiji': parse_image_jiji
     }
     # Get the function from switcher dictionary
     func = switcher.get(STORE, lambda: "Store is not supported yet")
