@@ -151,7 +151,7 @@ def parse_url_konga(soup):
     Returns list of urls of products from store
     '''
     urls = []
-    urls[:] = ["https://www.konga.com/product" + product['url_key'] for product in soup]
+    urls[:] = ["https://www.konga.com/product/" + product['url_key'] for product in soup]
 
     return urls
 
