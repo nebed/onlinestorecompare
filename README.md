@@ -21,3 +21,6 @@ _https://onlinestorecompare.herokuapp.com/search/<term>_
 _https://onlinestorecompare.herokuapp.com_
 [OnlineStoreCompare](https://onlinestorecompare.herokuapp.com "OnlineStoreCompare Front-End")
 > Enter the search text in the box provided and click search, it will return results from lowest price to highest
+
+
+### Contributions are welcome
