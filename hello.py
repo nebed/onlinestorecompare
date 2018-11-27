@@ -160,7 +160,7 @@ def parse_titles(soup,STORE):
         'konga': parse_title_konga,
         'kara': parse_title_kara,
         'slot': parse_title_slot,
-		'jiji':parse_title_jiji
+	'jiji':parse_title_jiji
     }
     # Get the function from switcher dictionary
     func = switcher.get(STORE, lambda: "Store is not supported yet")
@@ -175,7 +175,7 @@ def parse_images(soup,STORE):
         'konga': parse_image_konga,
         'kara': parse_image_kara,
         'slot': parse_image_slot,
-		'jiji':parse_image_jiji
+	'jiji':parse_image_jiji
     }
     # Get the function from switcher dictionary
     func = switcher.get(STORE, lambda: "Store is not supported yet")
@@ -189,7 +189,7 @@ def parse_prices(soup,STORE):
         'konga': parse_price_konga,
         'kara': parse_price_kara,
         'slot': parse_price_slot,
-		'jiji': parse_price_jiji
+	'jiji': parse_price_jiji
     }
     # Get the function from switcher dictionary
     func = switcher.get(STORE, lambda: "Store is not supported yet")
@@ -207,7 +207,7 @@ def parse_product_urls(soup,STORE):
         'konga': parse_url_konga,
         'kara': parse_url_kara,
         'slot': parse_url_slot,
-		'jiji': parse_url_jiji
+	'jiji': parse_url_jiji
     }
     # Get the function from switcher dictionary
     func = switcher.get(STORE, lambda: "Store is not supported yet")
