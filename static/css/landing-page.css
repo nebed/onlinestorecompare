@@ -121,6 +121,16 @@ header.masthead {
   border-color: #ba1600;
 }
 
+.jiji {
+  border-top-width: 2px;
+  border-top-color: #73b747;
+}
+
+.bg-jiji {
+  background-color: #73b747;
+  border-color: #73b747;
+}
+
 .bg-slot {
   background-color: #dd2400;
    border-color: #dd2400;
