@@ -24,6 +24,29 @@ Vue.component('search-result', {
 
 });
 
+Vue.component('lazy-load', {
+
+	props: [],
+
+	template: `
+			<div class="col-lg-4 col-md-4 mb-3">
+            <div class="lazy-div">
+                  <div class="row">
+                  <div class="col-md-5 col-5 col-sm-5 col-xs-5 animated-background">
+                    
+                  </div>
+                  <div class="col-md-7 col-7 col-sm-7 col-xs-7">
+                    <div class="animated-text lazy-text"></div>
+                    <div class="animated-text lazy-text"></div>
+                    <div class="animated-text lazy-text"></div>
+                    <div class="animated-text lazy-text"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+    `
+
+});
 
 
 var app = new Vue({
@@ -32,7 +55,8 @@ var app = new Vue({
 			data: {
 
 				term : "",
-				results: []
+				results: [],
+				loading: false,
 
 				
 			},
@@ -47,7 +71,8 @@ var app = new Vue({
 			methods : {
 
 				getResults() {
-					axios.get('/search/' + this.term).then(response => this.results = response.data);
+					this.loading = true;
+					axios.get('/search/' + this.term).then(response => {this.loading = false; return this.results = response.data;});
 				}
 			}
 

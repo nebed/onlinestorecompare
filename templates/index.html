@@ -69,6 +69,11 @@
     <section class="home-main-item mb-3">
       <div class="container p-3 bg-white">
       <h5 class="mb-3">Search results</h5>
+        <div v-show="loading" class="row">
+                <lazy-load></lazy-load>
+                <lazy-load></lazy-load>
+                <lazy-load></lazy-load>
+        </div>
         <div class="row">
           <search-result v-for="result in searchResults" :url="result.url" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></search-result>
         </div>

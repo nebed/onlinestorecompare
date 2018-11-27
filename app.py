@@ -96,7 +96,7 @@ def parse_jiji(url, sort=None):
         print(e)
         sys.exit(1)
     soup = BeautifulSoup(data, 'lxml')
-    print(soup)
+    #print(soup)
     table_present = soup.find('div', {'class': 'b-adverts-list-title'})
     if table_present is None:
         return EMPTY_LIST
