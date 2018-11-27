@@ -17,9 +17,10 @@ JUMIA_URL = os.getenv('JUMIA_URL', 'https://www.jumia.com.ng/catalog/?q=')
 KONGA_URL = os.getenv('KONGA_URL', 'https://b9zcrrrvom-3.algolianet.com/1/indexes/*/queries')
 KARA_URL = os.getenv('KARA_URL', 'http://www.kara.com.ng/catalogsearch/result?q=')
 SLOT_URL = os.getenv('SLOT_URL', 'https://slot.ng/?post_type=product&s=')
+JIJI_URL= os.getenv('JIJI_URL', 'https://jiji.ng/search?query=')
 EMPTY_LIST = []
 
-urls = [JUMIA_URL,KONGA_URL,KARA_URL,SLOT_URL]
+urls = [JUMIA_URL,KONGA_URL,KARA_URL,SLOT_URL,JIJI_URL]
 
 
 @app.route('/')
@@ -37,7 +38,8 @@ def search_products(term=None):
     #kongaurl = KONGA_URL + sub(r"\s+", '%20', str(term))
     karaurl = KARA_URL + str(term)
     sloturl = SLOT_URL + sub(r"\s+", '+', str(term))
-    results = parse_jumia(jumiaurl) + parse_kara(karaurl) + parse_konga(KONGA_URL,term) + parse_slot(sloturl)
+    jijiurl= JIJI_URL + sub(r"\s+", '+', str(term))	
+    results = parse_jumia(jumiaurl) + parse_kara(karaurl) + parse_konga(KONGA_URL,term) + parse_slot(sloturl) + parse_jiji(jijiurl)
 
     return jsonify(results), 200
 
@@ -78,6 +80,22 @@ def parse_jumia(url, sort=None):
     soup = BeautifulSoup(data, 'lxml')
     #print(soup)
     table_present = soup.find('section', {'class': 'products -mabaya'})
+    if table_present is None:
+        return EMPTY_LIST
+    return parse_all(soup,STORE)
+
+def parse_jiji(url, sort=None):
+	'''
+    This function parses the page and returns list of torrents
+    '''
+    STORE ="jiji"
+    try:
+        data = requests.get(url).text
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        print(e)
+        sys.exit(1)
+    soup = BeautifulSoup(data, 'lxml')
+    table_present = soup.find('div', {'class': 'b-adverts-list-title'})
     if table_present is None:
         return EMPTY_LIST
     return parse_all(soup,STORE)
@@ -139,7 +157,8 @@ def parse_titles(soup,STORE):
         'jumia': parse_title_jumia,
         'konga': parse_title_konga,
         'kara': parse_title_kara,
-        'slot': parse_title_slot
+        'slot': parse_title_slot,
+	    'jiji':parse_title_jiji
     }
     # Get the function from switcher dictionary
     func = switcher.get(STORE, lambda: "Store is not supported yet")
@@ -153,7 +172,8 @@ def parse_images(soup,STORE):
         'jumia': parse_image_jumia,
         'konga': parse_image_konga,
         'kara': parse_image_kara,
-        'slot': parse_image_slot
+        'slot': parse_image_slot,
+	    'jiji':parse_image_jiji
     }
     # Get the function from switcher dictionary
     func = switcher.get(STORE, lambda: "Store is not supported yet")
@@ -166,7 +186,8 @@ def parse_prices(soup,STORE):
         'jumia': parse_price_jumia,
         'konga': parse_price_konga,
         'kara': parse_price_kara,
-        'slot': parse_price_slot
+        'slot': parse_price_slot,
+	    'jiji': parse_price_jiji
     }
     # Get the function from switcher dictionary
     func = switcher.get(STORE, lambda: "Store is not supported yet")
@@ -183,7 +204,8 @@ def parse_product_urls(soup,STORE):
         'jumia': parse_url_jumia,
         'konga': parse_url_konga,
         'kara': parse_url_kara,
-        'slot': parse_url_slot
+        'slot': parse_url_slot,
+	    'jiji': parse_url_jiji
     }
     # Get the function from switcher dictionary
     func = switcher.get(STORE, lambda: "Store is not supported yet")
