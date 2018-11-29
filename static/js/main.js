@@ -85,7 +85,7 @@ var app = new Vue({
 				},
 
         setUrl(args) {
-                this.productUrl = 'http://127.0.0.1:5000/product?url=' + args.url + '&store=' + args.store;
+                this.productUrl = 'https://onlinestorecompare.herokuapp.com/product?url=' + args.url + '&store=' + args.store;
             },
         deleteElement(index) {
                 this.results.splice(index, 1);;
