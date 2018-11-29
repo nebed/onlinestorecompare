@@ -16,7 +16,7 @@ CORS(app)
 JUMIA_URL = os.getenv('JUMIA_URL', 'https://www.jumia.com.ng/catalog/?q=')
 KONGA_URL = os.getenv('KONGA_URL', 'https://b9zcrrrvom-3.algolianet.com/1/indexes/*/queries')
 KARA_URL = os.getenv('KARA_URL', 'http://www.kara.com.ng/catalogsearch/result?q=')
-SLOT_URL = os.getenv('SLOT_URL', 'https://slot.ng/?post_type=product&s=')
+SLOT_URL = os.getenv('SLOT_URL', 'http://slot.ng/?post_type=product&s=')
 JIJI_URL= os.getenv('JIJI_URL', 'https://jiji.ng/search?query=')
 EMPTY_LIST = []
 
