@@ -44,6 +44,39 @@ def search_products(term=None):
     return jsonify(results), 200
 
 
+@app.route('/product', methods=['GET'])
+def show_product():
+    url = request.args.get('url')
+    store = request.args.get('store')
+    try:
+        data = requests.get(url).text
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        print(e)
+        sys.exit(1)
+    soup = BeautifulSoup(data, 'lxml')
+    parsed_soup = create_local_page(soup,store)
+    with open("templates/product.html", "wb") as f_output:
+        f_output.write(parsed_soup.prettify("utf-8"))
+
+    return render_template('product.html'), 200
+
+
+def create_local_page(soup,STORE):
+    switcher = {
+        'jumia': parse_page_jumia,
+        'konga': parse_page_konga,
+        'kara': parse_page_kara,
+        'slot': parse_page_slot,
+        'jiji': parse_page_jiji
+    }
+    # Get the function from switcher dictionary
+    func = switcher.get(STORE, lambda: "Store is not supported yet")
+    # Execute the function
+    parsed_soup = func(soup)
+
+    return parsed_soup
+
+
 def parse_all(soup,STORE):
 
     titles = parse_titles(soup,STORE)
@@ -68,7 +101,7 @@ def parse_all(soup,STORE):
 
 def parse_jumia(url, sort=None):
     '''
-    This function parses the page and returns list of torrents
+    This function parses the page and returns list of products
     '''
     #print(url)
     STORE = "jumia"
@@ -86,7 +119,7 @@ def parse_jumia(url, sort=None):
 
 def parse_jiji(url, sort=None):
     '''
-    This function parses the page and returns list of torrents
+    This function parses the page and returns list of products
     '''
     #print(url)
     STORE = "jiji"
@@ -104,7 +137,7 @@ def parse_jiji(url, sort=None):
 
 def parse_kara(url, sort=None):
     '''
-    This function parses the page and returns list of torrents
+    This function parses the page and returns list of products
     '''
     #print(url)
     STORE = "kara"
@@ -122,7 +155,7 @@ def parse_kara(url, sort=None):
 
 def parse_konga(url, term):
     '''
-    This function parses the page and returns list of torrents
+    This function parses the page and returns list of products
     '''
     #print(url)
     STORE = "konga"
@@ -142,7 +175,7 @@ def parse_konga(url, term):
 
 def parse_slot(url, sort=None):
     '''
-    This function parses the page and returns list of torrents
+    This function parses the page and returns list of products
     '''
     #print(url)
     STORE = "slot"

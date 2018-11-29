@@ -4,7 +4,7 @@ Vue.component('search-result', {
 	props: ['store','image','url','title','price'],
 
 	template: `
-			<div class="col-lg-4 col-md-4 mb-3">
+			<div class="col-lg-4 col-md-4 mb-3" @swipeleft="onSwipeLeft">
             <div :class="store" class="card card-border-color">
                 <div class="card-body">
                   <div class="row">
@@ -14,14 +14,22 @@ Vue.component('search-result', {
                   <div class="col-md-7 col-7 col-sm-7 col-xs-7">
                     <a :href="url" class="cl1"><p><strong v-text=title></strong></p></a>
                     <p>₦{{ price }}</p>
-                    <button :class="'bg-'+ store" class="btn btn-primary btn-block" style="margin-bottom:4px;white-space: normal;"> Buy from {{ store }}</button>
+                    <button @click="showProduct" data-toggle="modal" data-target="#myModal" :class="'bg-'+ store" class="btn btn-primary btn-block" style="margin-bottom:4px;white-space: normal;"> Buy from {{ store }}</button>
                   </div>
                 </div>
                 </div>
               </div>
           	</div>
-    `
-
+    `,
+    methods: {
+    
+            showProduct() {
+              this.$emit('clicked', {'url':this.url, 'store':this.store});
+            },
+            onSwipeLeft() {
+              this.$emit('removed');
+            }
+    }
 });
 
 Vue.component('lazy-load', {
@@ -57,6 +65,7 @@ var app = new Vue({
 				term : "",
 				results: [],
 				loading: false,
+        productUrl: "",
 
 				
 			},
@@ -73,7 +82,14 @@ var app = new Vue({
 				getResults() {
 					this.loading = true;
 					axios.get('/search/' + this.term).then(response => {this.loading = false; return this.results = response.data;}).catch(error => { this.loading = false; return console.log(error);});
-				}
+				},
+
+        setUrl(args) {
+                this.productUrl = 'http://127.0.0.1:5000/product?url=' + args.url + '&store=' + args.store;
+            },
+        deleteElement(index) {
+                this.results.splice(index, 1);;
+            }
 			}
 
 		});

@@ -197,6 +197,52 @@ header.masthead {
     width: 100%;
 }
 
+.close-button {
+  overflow: hidden;
+}
+
+.modal-dialog {
+  height: 600px !important;
+}
+
+.bmd-modalContent {
+  box-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+
+.modal-body {
+  height: 100%;
+}
+
+.modal-content {
+  height: 100%;
+}
+  
+.bmd-modalContent .close {
+  font-size: 30px;
+  line-height: 30px;
+  padding: 7px 4px 7px 13px;
+  text-shadow: none;
+  opacity: .7;
+  color:#fff;
+}
+
+.bmd-modalContent .close span {
+  display: block;
+}
+
+.bmd-modalContent .close:hover,
+.bmd-modalContent .close:focus {
+  opacity: 1;
+  outline: none;
+}
+
+.bmd-modalContent iframe {
+  display: block;
+  margin: 0 auto;
+}
+
 
 header.masthead .overlay {
   position: absolute;

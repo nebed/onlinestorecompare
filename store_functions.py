@@ -1,5 +1,14 @@
 from re import sub
 from re import compile as recompile
+from urllib.parse import urljoin
+import os
+
+
+JUMIA_BASE_URL = os.getenv('JUMIA_BASE_URL', 'https://www.jumia.com.ng')
+KONGA_BASE_URL = os.getenv('KONGA_BASE_URL', 'https://konga.com')
+KARA_BASE_URL = os.getenv('KARA_BASE_URL', 'http://www.kara.com.ng')
+SLOT_BASE_URL = os.getenv('SLOT_BASE_URL', 'https://slot.ng')
+JIJI_BASE_URL = os.getenv('JIJI_BASE_URL', 'https://jiji.ng')
 
 def parse_title_jumia(soup):
     '''
@@ -181,3 +190,47 @@ def parse_url_jiji(soup):
     urls[:]=[url.get("href") for url in urls]
     
     return urls
+
+def parse_page_jumia(soup):
+    '''
+    Returns jumia page with absolute urls for styles and images
+    '''
+    return soup
+
+def parse_page_konga(soup):
+    '''
+    Returns konga page with absolute urls for styles and images
+    '''
+    links = soup.find_all('link')
+    scripts = soup.find_all('script')
+    for div in soup.find_all("div", {'class':'newsletter-popup-container js-newsletter-subscription-popup'}): 
+        div.decompose()
+    for link in links:
+        link['href'] = urljoin(KONGA_BASE_URL,link.get('href'))
+    for script in scripts:
+        script['src'] = urljoin(KONGA_BASE_URL,script.get('src'))
+
+
+
+    return soup
+
+def parse_page_kara(soup):
+    '''
+    Returns kara page with absolute urls for styles and images
+    '''
+
+    return soup
+
+def parse_page_slot(soup):
+    '''
+    Returns kara page with absolute urls for styles and images
+    '''
+
+    return soup
+
+def parse_page_jiji(soup):
+    '''
+    Returns jiji page with absolute urls for styles and images
+    '''
+
+    return soup
