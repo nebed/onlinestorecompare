@@ -4,7 +4,7 @@ Vue.component('search-result', {
 	props: ['store','image','url','title','price'],
 
 	template: `
-			<div class="col-lg-4 col-md-4 mb-3" @swipeleft="onSwipeLeft">
+			<div class="col-lg-4 col-md-4 mb-3" v-touch:swipe.left="onSwipeLeft" v-touch:swipe.right="onSwipeLeft">
             <div :class="store" class="card card-border-color">
                 <div class="card-body">
                   <div class="row">
