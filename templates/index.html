@@ -50,7 +50,7 @@
     <section>
 
     <!-- Masthead -->
-    <section class="home-main-item mb-3">
+    <section class="home-main-item mb-5">
       <div class="container p-3 bg-white">
       <h5 class="mb-3">Search products</h5>
         <div class="row">
@@ -66,7 +66,7 @@
       </div>
     </section>
 
-    <section class="home-main-item mb-3">
+    <section class="home-main-item mb-5">
       <div class="container p-3 bg-white">
       <h5 class="mb-3">Search results</h5>
         <div v-show="loading" class="row">
@@ -75,7 +75,9 @@
                 <lazy-load></lazy-load>
         </div>
         <div class="row">
-          <search-result @clicked="setUrl" @removed="deleteElement(index)" v-for="(result,index) in searchResults" :url="result.url" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></search-result>
+        <transition-group name='slideout' tag="div">
+          <search-result @clicked="setUrl" @removed="deleteElement(index)" :key="index" v-for="(result,index) in searchResults" :url="result.url" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></search-result>
+        </transition-group>
         </div>
       </div>
     </section>
