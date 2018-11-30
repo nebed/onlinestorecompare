@@ -68,6 +68,7 @@ var app = new Vue({
 				loading: false,
         productUrl: "",
         checkedStores: [],
+        itemBeforeAds: 10,
 
 				
 			},
@@ -88,7 +89,10 @@ var app = new Vue({
               return parseFloat(product.price) >= parseFloat(this.filterbyname);
             }
           });
-				}
+				},
+        rowCount: function(){     
+        return Math.ceil(this.searchResults.length / this.itemsBeforeAds);
+      },
 				
 			},
 

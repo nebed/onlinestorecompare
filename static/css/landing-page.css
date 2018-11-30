@@ -234,22 +234,10 @@ header.masthead {
 }
 
 
-.modal-dialog {
-  height: 600px !important;
-}
-
 .bmd-modalContent {
   box-shadow: none;
   background-color: transparent;
   border: 0;
-}
-
-.modal-body {
-  height: 100%;
-}
-
-.modal-content {
-  height: 100%;
 }
   
 .bmd-modalContent .close {
