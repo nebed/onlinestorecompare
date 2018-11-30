@@ -85,8 +85,8 @@
               <lazy-load></lazy-load>
               <lazy-load></lazy-load>
             </div>
-            <div class="row">
-              <transition-group name='slideout' tag="div">
+            <div class="card-columns">
+              <transition-group name='slideout'>
                 <search-result @clicked="setUrl" @removed="deleteElement(index)" :key="index" v-for="(result,index) in searchResults" :url="result.url" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></search-result>
               </transition-group>
             </div>

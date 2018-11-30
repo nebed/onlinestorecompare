@@ -4,7 +4,7 @@ Vue.component('search-result', {
 	props: ['store','image','url','title','price'],
 
 	template: `
-			<div class="col-lg-4 col-md-4 mb-3 slideout-item scaleup" v-touch:swipe.right="onSwipeLeft">
+			<div class="slideout-item scaleup" v-touch:swipe.right="onSwipeLeft">
             <div :class="store" class="card card-border-color">
                 <div class="card-body">
                   <div class="row">
@@ -14,7 +14,7 @@ Vue.component('search-result', {
                   <div class="col-md-7 col-7 col-sm-7 col-xs-7">
                     <a :href="url" class="cl1"><p><strong v-text=title></strong></p></a>
                     <p>₦{{ price }}</p>
-                    <button @click="showProduct" data-toggle="modal" data-target="#myModal" :class="'bg-'+ store" class="btn btn-primary btn-block" style="margin-bottom:4px;white-space: normal;"> Buy from {{ store }}</button>
+                    <button @click="showProduct" data-toggle="modal" data-target="#myModal" :class="'bg-'+ store" class="btn btn-primary btn-block"> Buy from {{ store }}</button>
                   </div>
                 </div>
                 </div>
