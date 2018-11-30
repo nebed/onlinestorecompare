@@ -63,16 +63,31 @@ var app = new Vue({
 			data: {
 
 				term : "",
+        filterbyname: "",
 				results: [],
 				loading: false,
         productUrl: "",
+        checkedStores: [],
 
 				
 			},
 
 			computed: {
 				searchResults() {
-					return this.results.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price));
+          if (this.checkedStores.length == 0 ){
+             var products = this.results.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price));
+          } else {
+           var products = this.results.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price)).filter((product) => {
+              return this.checkedStores.includes(product.source.toLowerCase());
+            });
+          }
+          return products.filter((product) => {
+            if (isNaN(this.filterbyname) || this.filterbyname == "" || this.filterbyname == null){
+              return product.title.toLowerCase().includes(this.filterbyname.toLowerCase());
+            } else {
+              return parseFloat(product.price) >= parseFloat(this.filterbyname);
+            }
+          });
 				}
 				
 			},

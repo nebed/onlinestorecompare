@@ -191,46 +191,46 @@ def parse_url_jiji(soup):
     
     return urls
 
-def parse_page_jumia(soup):
+#def parse_page_jumia(soup):
     '''
     Returns jumia page with absolute urls for styles and images
     '''
-    return soup
+#    return soup
 
-def parse_page_konga(soup):
+#def parse_page_konga(soup):
     '''
     Returns konga page with absolute urls for styles and images
     '''
-    links = soup.find_all('link')
-    scripts = soup.find_all('script')
-    for div in soup.find_all("div", {'class':'newsletter-popup-container js-newsletter-subscription-popup'}): 
-        div.decompose()
-    for link in links:
-        link['href'] = urljoin(KONGA_BASE_URL,link.get('href'))
-    for script in scripts:
-        script['src'] = urljoin(KONGA_BASE_URL,script.get('src'))
+#    links = soup.find_all('link')
+#   scripts = soup.find_all('script')
+#    for div in soup.find_all("div", {'class':'newsletter-popup-container js-newsletter-subscription-popup'}): 
+#        div.decompose()
+#    for link in links:
+#        link['href'] = urljoin(KONGA_BASE_URL,link.get('href'))
+#    for script in scripts:
+#        script['src'] = urljoin(KONGA_BASE_URL,script.get('src'))
 
 
 
-    return soup
+#    return soup
 
-def parse_page_kara(soup):
+#def parse_page_kara(soup):
     '''
     Returns kara page with absolute urls for styles and images
     '''
 
-    return soup
+#    return soup
 
-def parse_page_slot(soup):
+#def parse_page_slot(soup):
     '''
     Returns kara page with absolute urls for styles and images
     '''
 
-    return soup
+#    return soup
 
-def parse_page_jiji(soup):
+#def parse_page_jiji(soup):
     '''
     Returns jiji page with absolute urls for styles and images
     '''
 
-    return soup
+#    return soup

@@ -1,173 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>OnlilneStoreCompare</title>
-
+    <meta name="description" content="Shop online and compare prices in Nigeria - mobiles, electronics, fashion, computers, kids, books and more">
+    <meta name="country" content="ng">
+    <meta name="author" content="UcheNebed">
+    <title> Online Shopping Nigeria. Compare prices across online shops on StoreHopper!</title>
     <!-- Bootstrap core CSS -->
     <link href="/static/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
-
+    <link href="/static/vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" type="text/css">
     <!-- Custom fonts for this template -->
     <link href="/static/vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
-
     <!-- Custom styles for this template -->
     <link href="/static/css/landing-page.css" rel="stylesheet">
-
   </head>
-
   <body>
-
-  <div id="root">
-    <!-- Navigation -->
-    <nav class="navbar navbar-light static-top mb-3">
-      <div class="container">
-        <a class="navbar-brand" href="#"><strong>OnlineStoreCompare</strong></a>
-        <a class="navbar-brand" href="#">Find it all</a>
-      </div>
-    </nav>
-
-    <section class="mb-3">
-      <div class="container container-styled p-3 bg-orange">
-        <div class="row">
-          <div class="col-md-10">
-            <div class="pull-left mr-3"><img src="/static/img/price-tag.svg" width="50"></div>
-            <h6 class="text-yellow  mb-1">Find Best Prices at Online Stores.</h6>
-            <div class="pb-2 text-white">Compare prices from all major online stores in Nigeria. including Jumia, Jiji, Konga, Slot, Kara </div>
-          </div>
-          <div class="col-md-2 text-center">
-            <a class="mt-2 btn btn-h-black white transparent text-white border-yellow" href="#">Learn More <span class="fa fa-arrow-right"></span></a>
+    <div id="root">
+      <!-- Navigation -->
+      <nav class="navbar navbar-light static-top">
+        <div class="container">
+          <a class="navbar-brand" href="#"><strong>OnlineStoreCompare</strong></a>
+          <a class="" href="#">Find it all</a>
         </div>
-      </div>
-    </section>
-
-    <section>
-
-    <!-- Masthead -->
-    <section class="home-main-item mb-5">
-      <div class="container p-3 bg-white">
-      <h5 class="mb-3">Search products</h5>
-        <div class="row">
-          <div class="col-md-9 col-lg-8 col-xl-7 mx-auto">
-              <div class="form-row justify-content-center mb-3">
-                  <input type="text" class="form-control form-control-lg form-border" v-model="term" placeholder="Product Name">
+      </nav>
+      <section id="about comparing prices" class="mb-3">
+        <div class="container container-styled p-3 bg-orange">
+          <div class="row">
+            <div class="col-md-10">
+              <div class="pull-left mr-3"><img src="/static/img/price-tag.svg" width="50"></div>
+              <h6 class="text-yellow  mb-1">Find Best Prices at Online Stores.</h6>
+              <div class="pb-2 text-white">Compare prices from all major online stores in Nigeria. including Jumia, Jiji, Konga, Slot, Kara </div>
+            </div>
+          </div>
+        </section>
+        <!-- Masthead -->
+        <section id="compare prices from online stores" class="home-main-item mb-3">
+          <div class="container p-3 bg-white">
+            <h5 class="mb-3">Search products</h5>
+            <div class="row">
+              <div class="col-md-9 col-lg-8 col-xl-7 mx-auto">
+                <div class="form-row justify-content-center mb-3">
+                  <div class="input-group">
+                    <input v-on:keyup.enter="getResults" type="text" v-model="term" class="form-control" placeholder="Search from kara, konga, jiji, jumia, slot">
+                    <div class="input-group-append">
+                      <button v-on:click="getResults" class="btn btn-secondary btn-grey" type="button">
+                      <i class="fa fa-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="form-row justify-content-center">
-                  <button v-on:click="getResults" class="btn btn-block btn-lg border-yellow btn-grey">Search</button>
+            </div>
+          </div>
+        </section>
+        <section id = "search results" class="home-main-item mb-5">
+          <div class="container p-3 bg-white">
+            <h5 class="mb-3">Results</h5>
+            <div class="row mb-3">
+              <div class="col-md-4 col-4">
+                <div class="d-flex">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">Stores
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuReference">
+                      <label class="dropdown-item"><input type="checkbox" id="kara" value="kara" v-model="checkedStores"> Kara</label>
+                      <label class="dropdown-item"><input type="checkbox" id="konga" value="konga" v-model="checkedStores"> Konga</label>
+                      <label class="dropdown-item"><input type="checkbox" id="jiji" value="jiji" v-model="checkedStores"> Jiji</label>
+                      <label class="dropdown-item"><input type="checkbox" id="jumia" value="jumia" v-model="checkedStores"> Jumia</label>
+                      <label class="dropdown-item"><input type="checkbox" id="slot" value="slot" v-model="checkedStores"> Slot</label>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <div class="col-md-2 col-2">
+              </div>
+              <div class="col-md-6 col-6">
+                <input type=text class="form-control" v-model="filterbyname" placeholder="Price or Product">
+              </div>
+            </div>
+            <div v-show="loading" class="row">
+              <lazy-load></lazy-load>
+              <lazy-load></lazy-load>
+              <lazy-load></lazy-load>
+            </div>
+            <div class="row">
+              <transition-group name='slideout' tag="div">
+                <search-result @clicked="setUrl" @removed="deleteElement(index)" :key="index" v-for="(result,index) in searchResults" :url="result.url" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></search-result>
+              </transition-group>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="home-main-item mb-5">
-      <div class="container p-3 bg-white">
-      <h5 class="mb-3">Search results</h5>
-        <div v-show="loading" class="row">
-                <lazy-load></lazy-load>
-                <lazy-load></lazy-load>
-                <lazy-load></lazy-load>
-        </div>
-        <div class="row">
-        <transition-group name='slideout' tag="div">
-          <search-result @clicked="setUrl" @removed="deleteElement(index)" :key="index" v-for="(result,index) in searchResults" :url="result.url" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></search-result>
-        </transition-group>
-        </div>
-      </div>
-    </section>
-
-  </section>
-
-    <!-- Call to Action -->
-    <section class="call-to-action text-white text-center">
-      <div class="overlay"></div>
-      <div class="container">
-        <div class="row">
-          
-        </div>
-      </div>
-    </section> 
-
-    <!-- Footer -->
-    <footer class="footer bg-light">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
-            <ul class="list-inline mb-2">
-              <li class="list-inline-item">
-                <a href="#">About</a>
-              </li>
-              <li class="list-inline-item">&sdot;</li>
-              <li class="list-inline-item">
-                <a href="#">Contact</a>
-              </li>
-              <li class="list-inline-item">&sdot;</li>
-              <li class="list-inline-item">
-                <a href="#">Terms of Use</a>
-              </li>
-              <li class="list-inline-item">&sdot;</li>
-              <li class="list-inline-item">
-                <a href="#">Privacy Policy</a>
-              </li>
-            </ul>
-            <p class="text-muted small mb-4 mb-lg-0">&copy; OnlineStoreCompare 2018. All Rights Reserved.</p>
+        </section>
+        <!-- Call to Action -->
+        <section class="call-to-action text-white text-center">
+          <div class="overlay"></div>
+          <div class="container">
+            <div class="row">
+              
+            </div>
           </div>
-          <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
-            <ul class="list-inline mb-0">
-              <li class="list-inline-item mr-3">
-                <a href="#">
-                  <i class="fab fa-facebook fa-2x fa-fw"></i>
-                </a>
-              </li>
-              <li class="list-inline-item mr-3">
-                <a href="#">
-                  <i class="fab fa-twitter-square fa-2x fa-fw"></i>
-                </a>
-              </li>
-              <li class="list-inline-item">
-                <a href="#">
-                  <i class="fab fa-instagram fa-2x fa-fw"></i>
-                </a>
-              </li>
-            </ul>
+        </section>
+        <!-- Footer -->
+        <footer class="footer bg-light">
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
+                <ul class="list-inline mb-2">
+                  <li class="list-inline-item">
+                    <a href="#">About</a>
+                  </li>
+                  <li class="list-inline-item">&sdot;</li>
+                  <li class="list-inline-item">
+                    <a href="#">Contact</a>
+                  </li>
+                  <li class="list-inline-item">&sdot;</li>
+                  <li class="list-inline-item">
+                    <a href="#">Terms of Use</a>
+                  </li>
+                  <li class="list-inline-item">&sdot;</li>
+                  <li class="list-inline-item">
+                    <a href="#">Privacy Policy</a>
+                  </li>
+                </ul>
+                <p class="text-muted small mb-4 mb-lg-0">&copy; OnlineStoreCompare 2018. All Rights Reserved.</p>
+              </div>
+              <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
+                <ul class="list-inline mb-0">
+                  <li class="list-inline-item mr-3">
+                    <a href="#">
+                      <i class="fab fa-facebook fa-2x fa-fw"></i>
+                    </a>
+                  </li>
+                  <li class="list-inline-item mr-3">
+                    <a href="#">
+                      <i class="fab fa-twitter-square fa-2x fa-fw"></i>
+                    </a>
+                  </li>
+                  <li class="list-inline-item">
+                    <a href="#">
+                      <i class="fab fa-instagram fa-2x fa-fw"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </footer>
-
-    <div class="modal fade" id="myModal">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content bmd-modalContent">
-
-        <div class="modal-body">
-          
-          <div class="close-button">
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          </div>
-                      <iframe class="embed-responsive-item" width="100%" height="100%" :src="productUrl"></iframe>
-        </div>
-
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
-
-  </div>
-
-    <!-- Bootstrap core JavaScript -->
-    <script src="/static/vendor/jquery/jquery.min.js"></script>
-    <script src="/static/vendor/bootstrap/js/bootstrap.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="/static/js/main.js"></script>
-    <script src="/static/js/hammer.js"></script>
-    <script src="/static/js/index.js"></script>
-
-  </body>
-
-</html>
+        </footer>
+        <div class="modal fade" id="myModal">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content bmd-modalContent">
+              <div class="modal-body">
+                
+                <div class="close-button">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <iframe class="embed-responsive-item" width="100%" height="100%" :src="productUrl"></iframe>
+              </div>
+              </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+              </div><!-- /.modal -->
+            </div>
+            <!-- Bootstrap core JavaScript -->
+            <script src="/static/vendor/jquery/jquery.min.js"></script>
+            <script src="/static/vendor/bootstrap/js/popper.min.js"></script>
+            <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+            <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+            <script src="/static/js/main.js"></script>
+            <script src="/static/js/hammer.js"></script>
+            <script src="/static/js/index.js"></script>
+          </body>
+        </html>
