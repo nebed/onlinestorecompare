@@ -75,9 +75,17 @@
                 </div>
               </div>
               <div class="col-md-2 col-2">
+                
               </div>
               <div class="col-md-6 col-6">
-                <input type=text class="form-control" v-model="filterbyname" placeholder="Filter by Price or Product">
+                <input type=text class="form-control" v-model="filterbyname" placeholder="Filter by Product Name">
+              </div>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-8 col-md-8 mb-3">
+                <price-slide v-model="height.value" :ini-value="[height.min,height.max]">
+                  <div></div>
+                </price-slide>
               </div>
             </div>
             <div v-show="loading" class="row">
@@ -86,9 +94,9 @@
               <lazy-load></lazy-load>
             </div>
             <div class="card-columns">
-              <transition-group name='slideout'>
-                <search-result @clicked="setUrl" @removed="deleteElement(index)" :key="index" v-for="(result,index) in searchResults" :url="result.url" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></search-result>
-              </transition-group>
+              <!--<transition-group name='slideout'>-->
+              <search-result @clicked="setUrl" @removed="deleteElement(location)" :key="location" v-for="(result,location) in searchResults" :url="result.url" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></search-result>
+              <!-- </transition-group>-->
             </div>
           </div>
         </section>
@@ -166,6 +174,7 @@
             <script src="/static/vendor/bootstrap/js/popper.min.js"></script>
             <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+            <script src='https://nightcatsama.github.io/vue-slider-component/dist/index.js'></script>
             <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
             <script src="/static/js/main.js"></script>
             <script src="/static/js/hammer.js"></script>

@@ -1,4 +1,83 @@
 
+Vue.component('price-slide' , {
+  template: `<div>
+  <vue-slider :value="value" v-on:input="$emit('input', $event)" v-bind="options">
+  </vue-slider>  
+</div>`,
+  props: {
+    iniValue: Array,
+    value: { type: [Array, Number, String] }
+  },
+  data: function data() {
+    return {
+      // tooltip : '',
+      // value: [40,60],
+      options: {
+        eventType: 'auto',
+        width: 'auto',
+        height: 8,
+        dotSize: 20,
+        min: this.iniValue[0],
+        max: this.iniValue[1],
+        interval: 1,
+        show: true,
+        speed: 0.5,
+        disabled: false,
+        piecewise: false,
+        piecewiseStyle: false,
+        piecewiseLabel: false,
+        tooltip: "always", // why was this false, you want a tooltip, don't you? Yes i want, but didn't dig in plug setting such a dip untill now.
+        tooltipDir: ['left','right'],
+        reverse: false,
+        data: null,
+        clickable: true,
+        realTime: false,
+        lazy: false,
+        formatter: null,
+        bgStyle:  {
+  "backgroundColor": "#fff",
+  "boxShadow": "inset 0.5px 0.5px 3px 1px rgba(0,0,0,.36)"
+},
+        sliderStyle: [
+  {
+    "backgroundColor": "#f7b733"
+  },
+  {
+    "backgroundColor": "#4abdac"
+  }
+],
+        processStyle: {
+  "backgroundImage": "-webkit-linear-gradient(left, #f7b733, #4abdac)"
+},
+        piecewiseActiveStyle: null,
+        piecewiseStyle: null,
+        tooltipStyle: [
+  {
+    "backgroundColor": "#f7b733",
+    "borderColor": "#f7b733"
+  },
+  {
+    "backgroundColor": "#4abdac",
+    "borderColor": "#4abdac"
+  }
+],
+        labelStyle: null,
+        labelActiveStyle: null
+      }
+    };
+  },
+
+  components: {
+    'vueSlider': window['vue-slider-component']
+  },
+  watch: {
+      value: function (){
+         
+      }
+  }
+});
+
+
 Vue.component('search-result', {
 
 	props: ['store','image','url','title','price'],
@@ -69,7 +148,7 @@ var app = new Vue({
         productUrl: "",
         checkedStores: [],
         itemBeforeAds: 10,
-
+        height: { value: [0,700000], min: 0, max: 700000 },
 				
 			},
 
@@ -82,11 +161,10 @@ var app = new Vue({
               return this.checkedStores.includes(product.source.toLowerCase());
             });
           }
-          return products.filter((product) => {
+          var priceranges = products.filter((product) => { return parseFloat(product.price) >= this.height.value[0] && parseFloat(product.price) <= this.height.value[1];});
+          return priceranges.filter((pricerange) => {
             if (isNaN(this.filterbyname) || this.filterbyname == "" || this.filterbyname == null){
-              return product.title.toLowerCase().includes(this.filterbyname.toLowerCase());
-            } else {
-              return parseFloat(product.price) >= parseFloat(this.filterbyname);
+              return pricerange.title.toLowerCase().includes(this.filterbyname.toLowerCase());
             }
           });
 				},
@@ -109,6 +187,11 @@ var app = new Vue({
         deleteElement(index) {
                 this.results.splice(index, 1);;
             }
-			}
+			},
+      watch: {
+      height: function (){
+          console.log(this.height.value)
+      }
+  }
 
 		});
