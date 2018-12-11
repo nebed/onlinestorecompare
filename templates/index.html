@@ -94,9 +94,9 @@
               <lazy-load></lazy-load>
             </div>
             <div class="card-columns">
-              <!--<transition-group name='slideout'>-->
-              <search-result @clicked="setUrl" @removed="deleteElement(location)" :key="location" v-for="(result,location) in searchResults" :url="result.url" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></search-result>
-              <!-- </transition-group>-->
+              <transition-group name='slideout'>
+                <search-result @clicked="setUrl" @removed="deleteElement(location)" :key="location" v-for="(result,location) in searchResults" :url="result.url" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></search-result>
+              </transition-group>
             </div>
           </div>
         </section>
