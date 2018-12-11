@@ -149,15 +149,16 @@ var app = new Vue({
         checkedStores: [],
         itemBeforeAds: 10,
         height: { value: [0,700000], min: 0, max: 700000 },
+        showfilter: false,
 				
 			},
 
 			computed: {
 				searchResults() {
           if (this.checkedStores.length == 0 ){
-             var products = this.results.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price));
+             var products = this.results;
           } else {
-           var products = this.results.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price)).filter((product) => {
+           var products = this.results.filter((product) => {
               return this.checkedStores.includes(product.source.toLowerCase());
             });
           }
@@ -171,6 +172,9 @@ var app = new Vue({
         rowCount: function(){     
         return Math.ceil(this.searchResults.length / this.itemsBeforeAds);
       },
+      initialValue() {
+                return [parseFloat(this.results[0].price), parseFloat(this.results[this.results.length -1 ].price)] ;
+        },
 				
 			},
 
@@ -178,7 +182,9 @@ var app = new Vue({
 
 				getResults() {
 					this.loading = true;
-					axios.get('/search/' + this.term).then(response => {this.loading = false; return this.results = response.data;}).catch(error => { this.loading = false; return console.log(error);});
+          this.showfilter = false;
+          this.results = [];
+					axios.get('/search/' + this.term).then(response => {this.loading = false; this.results = response.data.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price)); this.showfilter=true; this.height.value[0] = parseFloat(this.results[0].price); this.height.value[1] = parseFloat(this.results[this.results.length -1 ].price); return this.results;}).catch(error => { this.loading = false; return console.log(error);});
 				},
 
         setUrl(args) {
@@ -186,7 +192,7 @@ var app = new Vue({
             },
         deleteElement(index) {
                 this.results.splice(index, 1);;
-            }
+            },
 			},
       watch: {
       height: function (){

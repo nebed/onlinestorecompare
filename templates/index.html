@@ -57,8 +57,8 @@
         </section>
         <section id = "search results" class="home-main-item mb-5">
           <div class="container p-3 bg-white">
-            <h5 class="mb-3">Results</h5>
-            <div class="row mb-3">
+            <h5 v-if="showfilter" class="mb-3">Results</h5>
+            <div v-if="showfilter" class="row mb-3">
               <div class="col-md-4 col-4">
                 <div class="d-flex">
                   <div class="btn-group">
@@ -83,7 +83,7 @@
             </div>
             <div class="row justify-content-center">
               <div class="col-8 col-md-8 mb-3">
-                <price-slide v-model="height.value" :ini-value="[height.min,height.max]">
+                <price-slide v-if="showfilter" v-model="height.value" :ini-value="initialValue">
                   <div></div>
                 </price-slide>
               </div>
