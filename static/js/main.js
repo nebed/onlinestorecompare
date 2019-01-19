@@ -84,16 +84,16 @@ Vue.component('search-result', {
 
 	template: `
 			<div class="slideout-item scaleup" v-touch:swipe.right="onSwipeLeft">
-            <div :class="store" class="card card-border-color">
+            <div :class="store" class="card grid-item card-border-color" :title="title">
                 <div class="card-body">
                   <div class="row">
                   <div class="col-md-5 col-5 col-sm-5 col-xs-5">
-                    <div class="align-middle mtb-auto"><a :href="url"><img class="img-fluid" :src="image" style="width:120px;"></a></div>
+                    <div class="align-middle mtb-auto"><img class="img-fluid" :alt="title" :src="image" style="width:120px;"></div>
                   </div>
                   <div class="col-md-7 col-7 col-sm-7 col-xs-7">
-                    <a :href="url" class="cl1"><p><strong v-text=title></strong></p></a>
+                    <p><strong v-text=title></strong></p>
                     <p>₦{{ price }}</p>
-                    <button @click="showProduct" data-toggle="modal" data-target="#myModal" :class="'bg-'+ store" class="btn btn-primary btn-block"> Buy from {{ store }}</button>
+                    <button @click="showProduct" :class="'bg-'+ store" class="btn btn-primary btn-block"> Buy from {{ store }}</button>
                   </div>
                 </div>
                 </div>
@@ -107,6 +107,30 @@ Vue.component('search-result', {
             },
             onSwipeLeft() {
               this.$emit('removed');
+            }
+    }
+});
+
+Vue.component('latest-result', {
+
+  props: ['store','image','url','title','price','location'],
+
+  template: `
+  <div class="col-xs-18 col-sm-6 col-md-3">
+                  <div class="thumbnail">
+                    <img class="img-fluid d-block w-100" :src="image" :alt="title">
+                    <div class="caption">
+                      <p><strong v-text=title></strong><p>
+                      <p>₦{{ price }}</p>
+                      <button @click="showProduct" :class="'bg-'+ store" class="btn btn-primary btn-block"> Buy from {{ store }}</button>
+                    </div>
+                  </div>
+                </div>
+    `,
+    methods: {
+
+      showProduct() {
+              this.$emit('clicked', {'url':this.url, 'store':this.store});
             }
     }
 });
@@ -135,6 +159,16 @@ Vue.component('lazy-load', {
 
 });
 
+      Vue.use(VueLoading, {
+      // props
+      canCancel: true,
+      color: '#fc4a1a',
+      backgroundColor: '#ffffff',
+      opacity: 0.5,
+      },{
+      // slots
+      });
+      Vue.component('loading', VueLoading)
 
 var app = new Vue({
 
@@ -144,6 +178,7 @@ var app = new Vue({
 				term : "",
         filterbyname: "",
 				results: [],
+        latestresults: [],
 				loading: false,
         productUrl: "",
         checkedStores: [],
@@ -184,16 +219,58 @@ var app = new Vue({
 					this.loading = true;
           this.showfilter = false;
           this.results = [];
-					axios.get('/search/' + this.term).then(response => {this.loading = false; this.results = response.data.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price)); this.showfilter=true; this.height.value[0] = parseFloat(this.results[0].price); this.height.value[1] = parseFloat(this.results[this.results.length -1 ].price); return this.results;}).catch(error => { this.loading = false; return console.log(error);});
+          let loader = Vue.$loading.show();
+					axios.get('/search/' + this.term).then(response => {loader.hide(); this.loading = false; this.results = response.data.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price)); this.showfilter=true; this.height.value[0] = parseFloat(this.results[0].price); this.height.value[1] = parseFloat(this.results[this.results.length -1 ].price); return this.results;}).catch(error => { loader.hide(); this.loading = false; return console.log(error);});
 				},
 
+        latestResults() {
+          axios.get('/latest/').then(response => {this.latestresults = response.data.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price)); return this.latestresults; }).catch(error => { return console.log(error);});
+        },
+
         setUrl(args) {
-                this.productUrl = 'https://onlinestorecompare.herokuapp.com/product?url=' + args.url + '&store=' + args.store;
+                var urltovisit = window.location.href + 'visitstore/?url=' + args.url + '&store=' + args.store;
+                let loader = Vue.$loading.show();
+                axios.get(urltovisit).then(response => {  loader.hide(); return window.location.href = response.data; }).catch(error => { loader.hide(); return console.log(error);});
             },
         deleteElement(index) {
                 this.results.splice(index, 1);;
             },
 			},
+      updated () {
+        $('.autoplay').slick({
+        autoplay: true,
+        dots: false,
+        arrows: false,
+        slidesToShow: 4,
+        slidesToScroll: 4,
+        responsive: [{
+          breakpoint: 500,
+          settings: {
+            autoplay: true,
+            dots: false,
+            arrows: false,
+            infinite: false,
+            slidesToShow: 2,
+            slidesToScroll: 2
+          }
+        },
+        {
+          breakpoint: 800,
+          settings: {
+            autoplay: true,
+            dots: false,
+            arrows: false,
+            infinite: false,
+            slidesToShow: 3,
+            slidesToScroll: 3
+          }
+        }]
+      });
+  },
+
+      beforeMount(){
+          this.latestResults()
+      },
       watch: {
       height: function (){
           console.log(this.height.value)

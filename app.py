@@ -1,13 +1,15 @@
-import os
+import os,sys
 
 import requests
 import json
+import sqlite3
 from collections import namedtuple
 from re import sub
 from bs4 import BeautifulSoup
 from flask import Flask, jsonify, render_template, request
 from store_functions import *
 from flask_cors import CORS
+
 
 
 app = Flask(__name__)
@@ -26,6 +28,33 @@ urls = [JUMIA_URL,KONGA_URL,KARA_URL,SLOT_URL,JIJI_URL]
 @app.route('/')
 def home_page():
 	return render_template('index.html'),200
+
+@app.route('/about')
+def about_page():
+    return render_template('about.html'),200
+
+@app.route('/contact')
+def contact_page():
+    return render_template('contact.html'),200
+
+@app.route('/visitstore/', methods=['GET'])
+def visit_store():
+    store = request.args.get('store')
+    url = request.args.get('url')
+    print(url)
+    conn = sqlite3.connect('database.db')
+    visited_url = conn.execute("SELECT id, times_visited from visited_stores where url = ? LIMIT 1",(url,)).fetchall()
+    print(visited_url)
+    if len(visited_url) == 0:
+        conn.execute("INSERT INTO visited_stores (store,url,times_visited) VALUES (?,?,?)", (store,url,1))
+        conn.commit()
+    else:
+        for row in visited_url:
+            conn.execute('UPDATE visited_stores set times_visited = ? where ID = ?',(row[1]+1,row[0]))
+            conn.commit()
+    conn.close()
+
+    return jsonify(url), 200
 
 @app.route('/search/<term>/', methods=['GET'])
 def search_products(term=None):
@@ -96,7 +125,6 @@ def parse_all(soup,STORE):
             'source': source,
         })
     return search_results
-
 
 
 def parse_jumia(url, sort=None):
@@ -202,6 +230,7 @@ def parse_titles(soup,STORE):
     return titles
 
 
+
 def parse_images(soup,STORE):
     switcher = {
         'jumia': parse_image_jumia,
@@ -215,6 +244,7 @@ def parse_images(soup,STORE):
     # Execute the function
     images = func(soup)
     return images
+
 
 def parse_prices(soup,STORE):
     switcher = {
@@ -248,9 +278,117 @@ def parse_product_urls(soup,STORE):
     urls = func(soup)
     return urls
 
+
 def parse_price_drops(soup,STORE):
 
     return 
+@app.route('/latest/', methods=['GET'])
+def latest_deals():
+    jumiaurl = "https://www.jumia.com.ng/last-price/"
+    karaurl = "http://www.kara.com.ng/index.php/deals"
+    sloturl = "https://slot.ng"
+    jijiurl= "https://jiji.ng"
+    results = latest_kara(karaurl) + latest_jumia(jumiaurl) + latest_konga(KONGA_URL) + latest_jiji(jijiurl)
+
+    return jsonify(results), 200
+
+def latest_kara(url, sort=None):
+    '''
+    This function parses the page and returns list of products
+    '''
+    #print(url)
+    STORE = "kara"
+    try:
+        data = requests.get(url).text
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        print(e)
+        sys.exit(1)
+    soup = BeautifulSoup(data, 'lxml')
+    #print(soup)
+    table_present = soup.find('ul', {'class': 'products-grid'})
+    #print(table_present)
+    if table_present is None:
+        return EMPTY_LIST
+    return parse_all(soup,STORE)
+
+def latest_jumia(url, sort=None):
+    '''
+    This function parses the page and returns list of products
+    '''
+    #print(url)
+    STORE = "jumia"
+    try:
+        data = requests.get(url).text
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        print(e)
+        sys.exit(1)
+    soup = BeautifulSoup(data, 'lxml')
+    #print(soup)
+    table_present = soup.find('section', {'class': 'products -mabaya'})
+    #print(table_present)
+    #print(soup)
+    if table_present is None:
+        return EMPTY_LIST
+    return parse_all(soup,STORE)
+
+
+def latest_konga(url, sort=None):
+    '''
+    This function parses the page and returns list of products
+    '''
+    #print(url)
+    STORE = "konga"
+    params = {"x-algolia-agent": "Algolia for vanilla JavaScript 3.30.0;react-instantsearch 5.3.2;JS Helper 2.26.1", "x-algolia-application-id": "B9ZCRRRVOM", "x-algolia-api-key": "cb605b0936b05ce1a62d96f53daa24f7"}
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36','accept': 'application/json','content-type': 'application/x-www-form-urlencoded','Origin': 'https://www.konga.com'}
+    data = json.dumps({"requests" : [{"indexName":"catalog_store_konga" ,"params":"query=" }]})
+    try:
+        response = requests.post(url,headers=headers, params=params, data=data).json()
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        print(e)
+        sys.exit(1)
+    #n.loads(response['requests'][], object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+    soup = response['results'][0]['hits']    
+    #print(response)
+    #table_present = soup.find('div', {'class': 'ais-InstantSearch__root'})
+    return parse_all(soup,STORE)
+
+def latest_slot(url, sort=None):
+    '''
+    This function parses the page and returns list of products
+    '''
+    #print(url)
+    STORE = "slot"
+    try:
+        data = requests.get(url).text
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        print(e)
+        sys.exit(1)
+    soup = BeautifulSoup(data, 'lxml')
+    print(soup)
+    table_present = soup.find('div', {'id': 'container'})
+    print(table_present)
+    if table_present is None:
+        return EMPTY_LIST
+    return parse_all(soup,STORE)
+
+def latest_jiji(url, sort=None):
+    '''
+    This function parses the page and returns list of products
+    '''
+    #print(url)
+    STORE = "jiji"
+    try:
+        data = requests.get(url).text
+    except requests.exceptions.RequestException as e:  # This is the correct syntax
+        print(e)
+        sys.exit(1)
+    soup = BeautifulSoup(data, 'lxml')
+    #print(soup)
+    table_present = soup.find('div', {'class': 'b-adverts-list-title'})
+    #print(table_present)
+    if table_present is None:
+        return EMPTY_LIST
+    return parse_all(soup,STORE)
 
 if __name__ == '__main__':
 	app.debug = True

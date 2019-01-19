@@ -19,6 +19,15 @@ def parse_title_jumia(soup):
 
     return titles
 
+def latest_title_jumia(soup):
+    '''
+    Returns list of titles of products from store
+    '''
+    titles = soup.find_all("span", class_="name")
+    titles[:] = [title.get_text() for title in titles]
+
+    return titles
+
 def parse_title_konga(soup):
     '''
     Returns list of titles of products from store
@@ -27,6 +36,7 @@ def parse_title_konga(soup):
     titles[:] = [product['name'] for product in soup]
 
     return titles
+
 
 def parse_title_kara(soup):
     '''

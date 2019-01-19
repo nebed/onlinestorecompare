@@ -3,32 +3,45 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Shop online and compare prices in Nigeria - mobiles, electronics, fashion, computers, kids, books and more">
+    <meta name="description" content="Online shopping for thousands of products such as Mobiles, tablets, cameras, laptops, fashion and many more. Shop in all of online stores in Nigeria all in one place."><meta property="og:title" content="Online Shopping Nigeria, Compare prices accross all stores"><meta property="og:description" content="Online shopping for thousands of products such as Mobiles, tablets, cameras, laptops, fashion and many more. Shop in all of online stores in Nigeria all in one place.">
+    <meta property="og:image" content="https://theLastPrice.com.ng/static/imd/last-pricei.png">
     <meta name="country" content="ng">
     <meta name="author" content="UcheNebed">
-    <title> Online Shopping Nigeria. Compare prices across online shops on StoreHopper!</title>
+    <title> theLastPrice. Compare prices across online shops on LastPrice!, Jumia, JiJi, Konga, Slot, Kara</title>
+    <link rel="icon" href="/static/img/last-pricei.png"/>
     <!-- Bootstrap core CSS -->
     <link href="/static/vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="/static/vendor/font-awesome-5/css/fontawesome-all.min.css" rel="stylesheet" type="text/css">
     <!-- Custom fonts for this template -->
     <link href="/static/vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <!-- Custom styles for this template -->
     <link href="/static/css/landing-page.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3/dist/vue-loading.css" rel="stylesheet">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-132682350-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'UA-132682350-1');
+    </script>
   </head>
   <body>
     <!-- Navigation -->
     <nav class="navbar navbar-light static-top">
       <div class="container">
-        <a class="navbar-brand" href="#"><strong>OnlineStoreCompare</strong></a>
-        <a class="" href="#">Find it all</a>
+        <a class="navbar-brand" href="/"><strong>theLastPrice</strong></a>
+        <a class="btn btn-primary bg-orange" href="/about">About Us</a>
+        <a class="btn btn-primary bg-orange" href="/contact">Contact Us</a>
       </div>
     </nav>
     <section id="about comparing prices" class="mb-3">
       <div class="container container-styled p-3 bg-orange">
         <div class="row">
           <div class="col-md-10">
-            <div class="pull-left mr-3"><img src="/static/img/price-tag.svg" width="50"></div>
+            <div class="pull-left mr-3"><img src="/static/img/LastPrice-white.svg" width="100"></div>
             <h6 class="text-yellow  mb-1">Find Best Prices at Online Stores.</h6>
             <div class="pb-2 text-white">Compare prices from all major online stores in Nigeria. including Jumia, Jiji, Konga, Slot, Kara </div>
           </div>
@@ -55,7 +68,7 @@
             </div>
           </div>
         </section>
-        <section id = "search results" class="home-main-item mb-5">
+        <section id = "search results" class="home-main-item mb-3" v-cloak>
           <div class="container p-3 bg-white">
             <h5 v-if="showfilter" class="mb-3">Results</h5>
             <div v-if="showfilter" class="row mb-3">
@@ -94,59 +107,98 @@
               <lazy-load></lazy-load>
             </div>
             <div class="card-columns">
-              <transition-group name='slideout'>
-                <search-result @clicked="setUrl" @removed="deleteElement(location)" :key="location" v-for="(result,location) in searchResults" :url="result.url" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></search-result>
-              </transition-group>
+              <!--<transition-group name='slideout'>-->
+              <div v-for="(result,location) in searchResults">
+                <search-result @clicked="setUrl" @removed="deleteElement(location)" :key="location" :url="result.url" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></search-result>
+                <div class="card grid-item card-border-color" v-if="location%4 == 0">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-5 col-5 col-sm-5 col-xs-5">
+                        <div class="align-middle mtb-auto"><a ><img class="img-fluid" style="width:120px;"></a></div>
+                      </div>
+                      <div class="col-md-7 col-7 col-sm-7 col-xs-7">
+                        <a class="cl1"><p><strong ></strong></p></a>
+                        <p></p>
+                        <button data-toggle="modal" data-target="#myModal" class="btn btn-primary btn-block"></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--</transition-group>-->
             </div>
           </div>
         </section>
-        <!-- Call to Action -->
-        <section class="call-to-action text-white text-center">
-          <div class="overlay"></div>
-          <div class="container">
-            <div class="row">
+        <!--Latest Deals -->
+        <section id = "Latest Deals" class="home-main-item mb-3">
+          <div class="container p-3 bg-white">
+            <h5 class="mb-3">Latest Deals</h5>
+            <div>
+              <div class="row autoplay">
+                <latest-result @clicked="setUrl" :key="location" :url="result.url" v-for="(result,location) in latestresults" :image="result.image" :store="result.source" :title="result.title" :price="result.price"></latest-result>
+              </div>
+              <!--<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style="width: 400px; margin: 0 auto">
+                <div class="carousel-inner">
+                  
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>-->
               
             </div>
           </div>
         </section>
+        <!--End Latest Deals-->
         <!-- Footer -->
         <footer class="footer bg-light">
           <div class="container">
+            <h3>theLastPrice - Online Shopping Nigeria, Compare prices accross all stores</h3>
+            <p>
+            Welcome to theLastPrice.com! We compare prices from all online shops in Nigeria. For each product we list for you all online shops that sell it, their shipping fees and delivery information. Note that at theLastPrice we do not actually sell any products, you can press on "go to shop" to visit the product page from that online shop and buy the product directly.</p>
+            <h4>Save money by comparing prices</h4>
+            <p>By using theLastPrice you can make wiser decisions when shopping either online or offline, and save money. You will be surprised how much savings you can make by only knowing your choices and comparing prices. Our data shows an average of 30% savings, which can go even higher for some product categories like cameras and laptops.</p>
+            <h4>No more fake deals!</h4>
+            <p>At theLastPrice we save historic price information for all products sold online in Nigeria. This way, you can tell whether the sales or deals advertised by online shops are real or not. You can browse our price drops section to see all products with REAL price drops. Alternatively, just click the price graph icon next to any product, to see how prices changed. Next time you see the word “deal”, make sure to check the product on theLastPrice first, one online shop might be selling it for cheaper and can deliver the product within 24 hours!</p>
+            <h4>Online shopping for all stores at once!</h4>
+            <p>theLastPrice has hundreds of thousands of products for more than 500 product category pulled from different online shops, so when you are browsing products on theLastPrice, you are effectively shopping from more than 50 online shops at the same time. To easily find what you are looking for, you can use our advanced filters to narrow your search by product category, brand, price, and other product properties such as color, storage, connectivity, memory, screen size, RAM and many more.</p>
+            <h4>At home or on the go</h4>
+            <p>theLastPrice is designed to be used on your desktop or mobile. Whether you are browsing online at home or shopping physically at the mall or shop, always make sure to use theLastPrice to check the price of the product at alternative shops online before you do the purchase.</p>
+            <h4>Always use theLastPrice before you buy!</h4>
+            <p>theLastPrice was founded with the vision to boost ecommerce in Nigeria, by empowering you, the shopper. Please do your research before you buy. By simply comparing prices, you can save hundreds of naira</p>
             <div class="row">
               <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
                 <ul class="list-inline mb-2">
                   <li class="list-inline-item">
-                    <a href="#">About</a>
+                    <a href="/about">About</a>
                   </li>
                   <li class="list-inline-item">&sdot;</li>
                   <li class="list-inline-item">
-                    <a href="#">Contact</a>
-                  </li>
-                  <li class="list-inline-item">&sdot;</li>
-                  <li class="list-inline-item">
-                    <a href="#">Terms of Use</a>
-                  </li>
-                  <li class="list-inline-item">&sdot;</li>
-                  <li class="list-inline-item">
-                    <a href="#">Privacy Policy</a>
+                    <a href="/contact">Contact</a>
                   </li>
                 </ul>
-                <p class="text-muted small mb-4 mb-lg-0">&copy; OnlineStoreCompare 2018. All Rights Reserved.</p>
+                <p class="text-muted small mb-4 mb-lg-0">&copy; theLastPrice 2019. All Rights Reserved.</p>
+                <p class="text-muted small mb-4 mb-lg-0">Disclaimer: theLastPrice.com.ng only acts as online price comparison website, all product names, trademarks, service marks, logos, brands, industrial models and designs featured or referred to within this site are the sole property of their respective owners and/or right holders and are only provided for the purpose of this site. Pricena.com acts as independent party and shall not be considered the representative, agent, employee, sponsor, joint venture partner or otherwise of such owners or right holders. &copy; theLastPrice 2019. All Rights Reserved.</p>
               </div>
               <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
                 <ul class="list-inline mb-0">
                   <li class="list-inline-item mr-3">
-                    <a href="#">
+                    <a href="https://facebook.com/thelastpriceng">
                       <i class="fab fa-facebook fa-2x fa-fw"></i>
                     </a>
                   </li>
                   <li class="list-inline-item mr-3">
-                    <a href="#">
+                    <a href="https://twitter.com/thelastpriceng">
                       <i class="fab fa-twitter-square fa-2x fa-fw"></i>
                     </a>
                   </li>
                   <li class="list-inline-item">
-                    <a href="#">
+                    <a href="https://instagram.com/thelastpriceng">
                       <i class="fab fa-instagram fa-2x fa-fw"></i>
                     </a>
                   </li>
@@ -157,27 +209,18 @@
         </footer>
         
       </div>
-      <div class="modal fade" id="myModal">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content bmd-modalContent">
-            <div class="modal-body">
-              
-              <div class="close-button">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              </div>
-            </div>
-            </div><!-- /.modal-content -->
-            </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-            <!-- Bootstrap core JavaScript -->
-            <script src="/static/vendor/jquery/jquery.min.js"></script>
-            <script src="/static/vendor/bootstrap/js/popper.min.js"></script>
-            <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
-            <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-            <script src='https://nightcatsama.github.io/vue-slider-component/dist/index.js'></script>
-            <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-            <script src="/static/js/main.js"></script>
-            <script src="/static/js/hammer.js"></script>
-            <script src="/static/js/index.js"></script>
-          </body>
-        </html>
+      <!-- Bootstrap core JavaScript -->
+      <script src="/static/vendor/jquery/jquery.min.js"></script>
+      <script src="/static/vendor/bootstrap/js/popper.min.js"></script>
+      <script src="/static/vendor/bootstrap/js/bootstrap.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+      <!-- Lastly add this package -->
+      <script src="https://cdn.jsdelivr.net/npm/vue-loading-overlay@3"></script>
+      <script src='https://nightcatsama.github.io/vue-slider-component/dist/index.js'></script>
+      <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+      <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+      <script src="/static/js/main.js"></script>
+      <script src="/static/js/hammer.js"></script>
+      <script src="/static/js/index.js"></script>
+    </body>
+  </html>
