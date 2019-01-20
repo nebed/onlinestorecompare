@@ -220,15 +220,15 @@ var app = new Vue({
           this.showfilter = false;
           this.results = [];
           let loader = Vue.$loading.show();
-					axios.get('/search/' + this.term).then(response => {loader.hide(); this.loading = false; this.results = response.data.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price)); this.showfilter=true; this.height.value[0] = parseFloat(this.results[0].price); this.height.value[1] = parseFloat(this.results[this.results.length -1 ].price); return this.results;}).catch(error => { loader.hide(); this.loading = false; return console.log(error);});
+					axios.get('/search' + this.term).then(response => {loader.hide(); this.loading = false; this.results = response.data.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price)); this.showfilter=true; this.height.value[0] = parseFloat(this.results[0].price); this.height.value[1] = parseFloat(this.results[this.results.length -1 ].price); return this.results;}).catch(error => { loader.hide(); this.loading = false; return console.log(error);});
 				},
 
         latestResults() {
-          axios.get('/latest/').then(response => {this.latestresults = response.data.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price)); return this.latestresults; }).catch(error => { return console.log(error);});
+          axios.get('/latest').then(response => {this.latestresults = response.data.sort((a,b)=>parseFloat(a.price) - parseFloat(b.price)); return this.latestresults; }).catch(error => { return console.log(error);});
         },
 
         setUrl(args) {
-                var urltovisit = window.location.href + 'visitstore/?url=' + args.url + '&store=' + args.store;
+                var urltovisit = window.location.href + 'visitstore?url=' + args.url + '&store=' + args.store;
                 let loader = Vue.$loading.show();
                 axios.get(urltovisit).then(response => {  loader.hide(); return window.location.href = response.data; }).catch(error => { loader.hide(); return console.log(error);});
             },

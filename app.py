@@ -37,7 +37,7 @@ def about_page():
 def contact_page():
     return render_template('contact.html'),200
 
-@app.route('/visitstore/', methods=['GET'])
+@app.route('/visitstore', methods=['GET'])
 def visit_store():
     store = request.args.get('store')
     url = request.args.get('url')
@@ -56,7 +56,7 @@ def visit_store():
 
     return jsonify(url), 200
 
-@app.route('/search/<term>/', methods=['GET'])
+@app.route('/search/<term>', methods=['GET'])
 def search_products(term=None):
     '''
     Searches online stores using the given term. If no term is given, defaults to recent.
@@ -282,7 +282,7 @@ def parse_product_urls(soup,STORE):
 def parse_price_drops(soup,STORE):
 
     return 
-@app.route('/latest/', methods=['GET'])
+@app.route('/latest', methods=['GET'])
 def latest_deals():
     jumiaurl = "https://www.jumia.com.ng/last-price/"
     karaurl = "http://www.kara.com.ng/index.php/deals"
